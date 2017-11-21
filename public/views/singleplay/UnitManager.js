@@ -1,6 +1,7 @@
 import Entity from './Entity';
 import Utils from './Utils';
 import Action from './Action';
+import Pathfinding from "./Pathfinding";
 
 export default class UnitManager {
     constructor(Animation, animationManager, spriteManager, activeTile, actionPoint, state, entities, textures, conditions) {
@@ -195,6 +196,28 @@ export default class UnitManager {
         }, 500);
     }
 
+    neighbors(sender, target) {
+        console.log("sender"+sender+" target"+target+" neighvoors?");
+        if (target.xpos + 1 === sender.xpos && target.ypos === sender.ypos) {
+            return true;
+        }
+
+        if (target.xpos - 1 === sender.xpos && target.ypos === sender.ypos) {
+            return true;
+        }
+
+        if (target.ypos + 1 === sender.ypos && target.xpos === sender.xpos) {
+            return true;
+        }
+
+        if (target.ypos - 1 === sender.ypos && target.xpos === sender.xpos) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     activeUnit(unit) {
         if (this.firstActiveUnit) {
             this.firstActiveUnit = false;
@@ -232,7 +255,6 @@ export default class UnitManager {
             skillImg.src = '/views/singleplay/icons/' + skill.name + '.png';
             document.getElementsByClassName('container')[0].appendChild(skillImg);
         }.bind(this));
-
         // this.animationManager.animationActiveTile(unit);
         while(this.units[this.activeIndex % this.units.length].isDead()) {
             this.activeIndex++;
@@ -273,14 +295,17 @@ export default class UnitManager {
                     }.bind(this);
                     ul.appendChild(li);
                 }.bind(this);
-                if (elem.isOccupied() && elem.unitOnTile.type === unit.type) {
+
+
+
+                if (elem.isOccupied() && elem.unitOnTile.type === unit.type ) {
                     console.log('Союзник');
                     unit.skills.forEach(function(item) {
                         if (item.damage[0] < 0) {
                             func(item);
                         }
                     });
-                } else if (elem.isOccupied() && elem.unitOnTile.type !== unit.type) {
+                } else if (elem.isOccupied() && elem.unitOnTile.type !== unit.type && (unit.shooter || this.neighbors(global.tiledMap[unit.xpos][unit.ypos], elem))) {
                     console.log('Противник');
                     unit.skills.forEach(function(item) {
                         if (item.damage[0] > 0) {

@@ -6,6 +6,7 @@ import Utils from './Utils';
 import AnimationManager from './AnimationManager';
 import UnitManager from './UnitManager';
 import Animation from './Animation';
+import Action from "./Action";
 
 //import {global.tiledMap,test} from './GameModule'
 //import   './GameModule'
@@ -113,6 +114,13 @@ export default class GameManager {
                     document.mozCancelFullScreen();
                     this.fullScreen = false;
                 }
+            }
+            if (x>=0.25 && x <=0.3 && y<=0.05) {
+                let action = new Action();
+                action.sender = null;
+                action.target = null;
+                action.ability = null;
+                global.actionDeque.push(action);
             }
         });
     }

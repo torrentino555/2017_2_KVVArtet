@@ -73,6 +73,8 @@ export default class DemoGameModule {
                 let action = global.actionDeque.shift();
                 if (action.isMovement() && !action.target.isOccupied()) {
                     this.makeMove(action);
+                // } else if (action.isPrepareAbility()) {
+                //     this.makePrepareAbility(action);
                 } else if (action.isAbility()) {
                     console.log('this is ability: ' + action.ability.name);
                     if (action.ability.damage[1] < 0) {
@@ -103,6 +105,11 @@ export default class DemoGameModule {
             }
         }
     }
+
+    // makePrepareAbility(action) {
+    //     if (action.ability.typeOfArea === "circle") {
+    //     }
+    // }
 
     makeMove(action) {
         console.log(action.sender.getInhabitant().name + ' make move from [' + action.sender.xpos + ',' + action.sender.ypos + ']' + ' to [' + action.target.xpos + ',' + action.target.ypos + ']');
@@ -208,16 +215,15 @@ export default class DemoGameModule {
 
     loseGame() {
         this.stopGameLoop();
+        document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
         document.getElementById('lose').removeAttribute('hidden');
         //createoverlaylose
     }
 
     winGame() {
-        setTimeout(function() {
-            document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-            document.getElementById('win').removeAttribute('hidden');
-        }, 1000);
         this.stopGameLoop();
+        document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
+        document.getElementById('win').removeAttribute('hidden');
         //createoverlaywin
     }
 
