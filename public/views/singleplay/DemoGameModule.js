@@ -214,16 +214,20 @@ export default class DemoGameModule {
     }
 
     loseGame() {
-        this.stopGameLoop();
-        document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-        document.getElementById('lose').removeAttribute('hidden');
+        setTimeout(function() {
+            this.stopGameLoop();
+            document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
+            document.getElementById('lose').removeAttribute('hidden');
+        }.bind(this), 1500);
         //createoverlaylose
     }
 
     winGame() {
-        this.stopGameLoop();
-        document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-        document.getElementById('win').removeAttribute('hidden');
+        setTimeout(function() {
+            this.stopGameLoop();
+            document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
+            document.getElementById('win').removeAttribute('hidden');
+        }.bind(this), 1500);
         //createoverlaywin
     }
 
@@ -339,7 +343,7 @@ export default class DemoGameModule {
             path.push(key);
         }
         path.shift();
-        this.gameManager.unitManager.drawActiveTiles(path);
+        this.gameManager.unitManager.setCurrentSkill(0, path);
     }
 
     beginTurn() {

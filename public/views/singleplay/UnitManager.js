@@ -1,7 +1,6 @@
 import Entity from './Entity';
 import Utils from './Utils';
 import Action from './Action';
-import Pathfinding from "./Pathfinding";
 
 export default class UnitManager {
     constructor(Animation, animationManager, spriteManager, activeTile, actionPoint, state, entities, textures, conditions) {
@@ -19,7 +18,6 @@ export default class UnitManager {
         this.actionPoint = actionPoint;
         this.activeIndex = 0;
         this.possibleMoves = [];
-        this.dropMenu = 0;
         this.state = state;
         this.indexUnit = {
             warrior: 0,
@@ -34,13 +32,14 @@ export default class UnitManager {
     }
 
     stateCheck(callback) {
-        if (this.state.AnimationOnLowbar) {
+        console.log(this.state);
+        if (this.state.state) {
             setTimeout(function() {
                 requestAnimationFrame(callback);
             }, 50);
             return true;
         }
-        this.state.AnimationOnLowbar = true;
+        this.state.state = true;
     }
 
     timeAndRunSkill(nameSkill, sender, target, runAnimation, wounded) {
@@ -115,47 +114,6 @@ export default class UnitManager {
     }
 
     updateSkillbar(name, sender, target) {
-        if (this.skillbar.length + 1 > 7) {
-            this.skillbar.pop();
-            document.getElementById(6).remove();
-            document.getElementById(6 + 'box').remove();
-        }
-        this.skillbar.forEach(function(skill, i) {
-            let elem = document.getElementById(i + 'box');
-            elem.id = (i + 1) + 'box';
-            let trans = [parseFloat(elem.style.right.substring(0, elem.style.right.length - 2)), parseFloat(elem.style.top.substring(0, elem.style.top.length - 2))];
-            this.Animation.MoveHtmlAnimation(elem, trans , [trans[0], trans[1] + 10] ,0.5);
-            elem = document.getElementById(i);
-            elem.id = i + 1;
-            trans = [parseFloat(elem.style.right.substring(0, elem.style.right.length - 2)), parseFloat(elem.style.top.substring(0, elem.style.top.length - 2))];
-            this.Animation.MoveHtmlAnimation(elem, trans , [trans[0], trans[1] + 10] ,0.5);
-        }.bind(this));
-        this.skillbar.unshift(name);
-        setTimeout(function() {
-            let skillBox = document.createElement('img');
-            skillBox.id = 0 + 'box';
-            skillBox.style.position = 'absolute';
-            skillBox.style.right = 3.4 + 'vw';
-            skillBox.style.top = 24.72 + 'vh';
-            skillBox.style.width = '3.6vw';
-            skillBox.style.height = '6.3vh';
-            skillBox.src = '/views/singleplay/textures/skillBox.png';
-            document.getElementsByClassName('container')[0].appendChild(skillBox);
-            let skillImg = document.createElement('img');
-            skillImg.id = 0;
-            if(target.isOccupied()) {
-                skillImg.title = sender.unitOnTile.class + ' attack ' + target.unitOnTile.class;
-            } else {
-                skillImg.title = sender.unitOnTile.class + ' attack ' + target.xpos + ':' + target.ypos + ' cell';
-            }
-            skillImg.style.position = 'absolute';
-            skillImg.style.right = 3.8 + 'vw';
-            skillImg.style.top = 25.5 + 'vh';
-            skillImg.style.width = '2.7vw';
-            skillImg.style.height = '4.6vh';
-            skillImg.src = '/views/singleplay/icons/' + name + '.png';
-            document.getElementsByClassName('container')[0].appendChild(skillImg);
-        }, 500);
     }
 
     neighbors(sender, target) {
@@ -236,110 +194,92 @@ export default class UnitManager {
             let xMax = xMin + 0.6;
             let yMin = (1 - global.mapShiftY)/2;
             let yMax = yMin + 0.8;
-            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && this.dropMenu === 0 && !this.state.AnimationOnMap) {
+            console.log('STATE: ' + this.state.state);
+            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
                 let i = Math.floor(((x - xMin) / 0.6) / (1 / 16));
                 let j = Math.floor(((y - yMin) / 0.8) / (1 / 12));
-                let div = document.createElement('div');
-                this.dropMenu = div;
-                let ul = document.createElement('ul');
-                div.className = 'drop-menu';
-                div.style.left = event.clientX - 40 + 'px';
-                div.style.top = event.clientY - 15 + 'px';
-                div.appendChild(ul);
-                let elem = global.tiledMap[i][j];
-                let func = function(item) {
-                    let li = document.createElement('li');
-                    li.innerHTML = item.name;
-                    li.onclick = function() {
-                        let action = new Action();
-                        action.sender = global.tiledMap[unit.xpos][unit.ypos];
-                        action.target = global.tiledMap[i][j];
-                        action.ability = item;
-                        global.actionDeque.push(action);
-                        this.dropMenu.remove();
-                        this.dropMenu = 0;
-                    }.bind(this);
-                    ul.appendChild(li);
-                }.bind(this);
-
-
-
-                if (elem.isOccupied() && elem.unitOnTile.type === unit.type ) {
-                    console.log('Союзник');
-                    unit.skills.forEach(function(item) {
-                        if (item.damage[0] < 0) {
-                            func(item);
-                        }
-                    });
-                } else if (elem.isOccupied() && elem.unitOnTile.type !== unit.type && (unit.shooter || this.neighbors(global.tiledMap[unit.xpos][unit.ypos], elem))) {
-                    console.log('Противник');
-                    unit.skills.forEach(function(item) {
-                        if (item.damage[0] > 0) {
-                            func(item);
-                        }
-                    });
-                } else {
-                    console.log('Карта');
-                    unit.skills.forEach(function(item) {
-                        if (item.typeOfArea === 'circle') {
-                            func(item);
-                        }
-                    });
-                    if (elem.active) {
-                        let li = document.createElement('li');
-                        li.innerHTML = 'Move';
-                        li.onclick = function () {
-                            let action = new Action();
-                            action.sender = global.tiledMap[unit.xpos][unit.ypos];
-                            action.target = global.tiledMap[i][j];
-                            action.ability = null;
-                            global.actionDeque.push(action);
-                            this.dropMenu.remove();
-                            this.dropMenu = 0;
-                        }.bind(this);
-                        ul.appendChild(li);
+                if (global.tiledMap[i][j].active || this.massiveSkill) {
+                    let action = new Action();
+                    action.sender = global.tiledMap[unit.xpos][unit.ypos];
+                    action.target = global.tiledMap[i][j];
+                    action.ability = this.activeSkill.name === 'Move' ? null : this.activeSkill;
+                    global.actionDeque.push(action);
+                    if (this.massiveSkill) {
+                        this.deleteLastActiveTiles();
                     }
                 }
-                document.getElementsByClassName('container')[0].appendChild(div);
-            } else if (event.which === 1 && this.dropMenu !== 0 && event.target.tagName !== 'LI') {
-                this.dropMenu.remove();
-                this.dropMenu = 0;
             } else if (event.which === 1 && x >= 0.33 && x <= 0.675 && y >= 0 && y <= 0.07) {
                 let i = Math.floor((x - 0.33)/(0.35/10));
-                if (i === 0) {
-                    this.drawActiveTiles(this.path, true);
-                    this.massiveSkill = false;
-                } else if (this.currentUnit.skills[i].typeOfArea === 'circle') {
-                    this.possibleMoves.forEach(function(move) {
-                        global.tiledMap[move.xpos][move.ypos].active = false;
-                        this.spriteManager.deleteSprite(move.id);
-                    }.bind(this));
-                    this.massiveSkill = true;
-                } else {
-                    this.massiveSkill = false;
-                    let tiles = getActiveTiles(global.tiledMap[this.currentUnit.xpos][this.currentUnit.ypos], this.currentUnit.skills[i]);
-                    this.drawActiveTiles(tiles, true);
-                }
-                this.activeSkill = this.currentUnit.skills[i];
-                let activeSkill = document.getElementById('activeSkill');
-                activeSkill.style.left = 32.5 + (35/10)*i + 'vw';
+                this.setCurrentSkill(i);
             }
             return false;
         }.bind(this);
     }
 
-    drawActiveTiles(tiles, rewritePathOrNot) {
-        if (!rewritePathOrNot) {
-            this.path = tiles;
+    setCurrentSkill(i, path) {
+        if (this.stateCheck(this.setCurrentSkill.bind(this, i, path))) {
+            return;
         }
+        this.state.state = false;
+        if (path) {
+            this.path = path;
+        }
+        if (i >= this.currentUnit.skills.length) {
+            return;
+        }
+        if (i === 0) {
+            this.drawActiveTiles(this.path);
+            this.massiveSkill = false;
+        } else if (this.currentUnit.skills[i].typeOfArea === 'circle') {
+            this.possibleMoves.forEach(function(move) {
+                global.tiledMap[move.xpos][move.ypos].active = false;
+                this.spriteManager.deleteSprite(move.id);
+            }.bind(this));
+            this.massiveSkill = true;
+        } else {
+            this.massiveSkill = false;
+            let tiles = this.getActiveTiles(global.tiledMap[this.currentUnit.xpos][this.currentUnit.ypos], this.currentUnit.skills[i]);
+            this.drawActiveTiles(tiles);
+        }
+        this.activeSkill = this.currentUnit.skills[i];
+        let activeSkill = document.getElementById('activeSkill');
+        activeSkill.style.left = 32.5 + (35/10)*i + 'vw';
+    }
+
+    getActiveTiles(x, y) {
+        let result = [];
+        this.units.forEach((unit) => {
+            if (y.damage[0] > 0) {
+                if (unit.type !== x.unitOnTile.type && !unit.isDead()) {
+                    if (this.currentUnit.shooter || (Math.abs(this.currentUnit.xpos - unit.xpos) <= 1 && Math.abs(this.currentUnit.ypos - unit.ypos) <= 1)) {
+                        result.push(global.tiledMap[unit.xpos][unit.ypos]);
+                    }
+                }
+            } else {
+                if (unit.type === x.unitOnTile.type && !unit.isDead()) {
+                    if (this.currentUnit.shooter || (Math.abs(this.currentUnit.xpos - unit.xpos) <= 1 && Math.abs(this.currentUnit.ypos - unit.ypos) <= 1)) {
+                        result.push(global.tiledMap[unit.xpos][unit.ypos]);
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+    deleteLastActiveTiles() {
         this.possibleMoves.forEach(function(move) {
             global.tiledMap[move.xpos][move.ypos].active = false;
             this.spriteManager.deleteSprite(move.id);
         }.bind(this));
         this.possibleMoves = [];
+    }
+
+    drawActiveTiles(tiles) {
+        this.deleteLastActiveTiles();
         tiles.forEach(function(tile) {
+            console.log(tile.unitOnTile);
             this.possibleMoves.push({
-                id: this.spriteManager.addSprite(-2, Utils.translationOnMap(tile.ypos, tile.xpos), tile.unitOnTile ? (tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10]) : this.textures[0], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
+                id: this.spriteManager.addSprite(-2, Utils.translationOnMap(tile.ypos, tile.xpos), (tile.unitOnTile && !tile.unitOnTile.isDead()) ? (tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10]) : this.textures[0], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
                 xpos: tile.xpos,
                 ypos: tile.ypos
             });
@@ -353,6 +293,7 @@ export default class UnitManager {
     }
 
     unitAttack(nameSkill, sender, target, wounded) {
+        this.state.state = true;
         this.spriteManager.getSprite(this.actionPoint).setTexture(this.textures[7]);
         this.updateSkillbar(nameSkill, sender, target);
         let index = this.indexUnit[sender.unitOnTile.class];
@@ -366,6 +307,7 @@ export default class UnitManager {
                     this.spriteManager.getSprite(sender.unitOnTile.entity.mapId).setTexture(this.entities[6 + index]);
                 }
                 this.updateHealth(wounded);
+                this.state.state = false;
             }.bind(this, sender, target), timer + 100);
         }.bind(this, nameSkill, sender, target), 500);
     }
@@ -378,6 +320,7 @@ export default class UnitManager {
             DeadUnits.forEach((unit) => {
                 this.spriteManager.getSprite(unit.entity.lowbarId).setTexture(this.textures[8]);
                 this.spriteManager.getSprite(unit.entity.mapId).setTexture(this.conditions[2 + 3 * this.indexUnit[unit.class]]);
+                this.spriteManager.getSprite(unit.entity.lowbarHealthId).setVertexs(Utils.madeRectangle(0, 0, 0, 0));
                 this.spriteManager.getSprite(unit.entity.healthbarId).setVertexs(Utils.madeRectangle(0, 0, 0, 0));
             });
         }, timer + 800);

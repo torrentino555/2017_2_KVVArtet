@@ -1,6 +1,5 @@
 import GraphicEngine from './GraphicEngine';
 import SpriteManager from './SpriteManager';
-import State from './State';
 import Loader from './Loader';
 import Utils from './Utils';
 import AnimationManager from './AnimationManager';
@@ -13,9 +12,11 @@ export default class GameManager {
         this.ratio = 16 / 9;
         this.engine = new GraphicEngine('canvas', true);
         this.spriteManager = new SpriteManager(this.engine);
-        this.state = new State();
+        this.state = {state: false};
         this.tiles = [];
         this.fullScreen = false;
+        this.lastI = -1;
+        this.lastJ = -1;
     }
 
     startGameRendering(callback) {
@@ -96,23 +97,20 @@ export default class GameManager {
                 this.spriteManager.deleteSprite(tile);
             }.bind(this));
             this.tiles = [];
-            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.AnimationOnMap) {
+            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
                 let i = Math.floor(((x - xMin) / 0.6) / (1 / 16));
                 let j = Math.floor(((y - yMin) / 0.8) / (1 / 12));
-                if (i < 16 && j < 12 && this.unitManager.massiveSkill) {
+                if (i !== this.lastI && j !== this.lastJ && i < 16 && j < 12 && this.unitManager.massiveSkill) {
                     let halfArea = Math.floor(this.unitManager.activeSkill.area/2) + 1;
+                    let tiles = [];
                     for (let ii = i - halfArea; ii <= i + halfArea; ii++) {
                         for (let jj = j - halfArea; jj <= j + halfArea; jj++) {
                             if (ii >= 0 && ii < 16 && jj >= 0 && jj < 12) {
-                                this.tiles.push(this.spriteManager.addSprite(-2, Utils.translationOnMap(jj, ii), this.textures[10], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true));
+                                tiles.push(global.tiledMap[ii][jj]);
                             }
                         }
                     }
-                    this.unitManager.units.forEach((unit) => {
-                        this.spriteManager.getSprite(unit.entity.mapId).order = unit.ypos;
-                        this.spriteManager.getSprite(unit.entity.healthbarId).order = unit.ypos;
-                    });
-                    this.spriteManager.sortSprites();
+                    this.unitManager.drawActiveTiles(tiles);
                 } else if (i < 16 && j < 12 && global.tiledMap[i][j].active) {
                     this.spriteManager.getSprite(this.activeElem).setTrans(Utils.translationOnMap(j, i));
                 } else {
@@ -155,16 +153,6 @@ export default class GameManager {
         ], this.textures[3], Utils.madeRectangle(0, 0, 0.05, -0.05 * this.ratio), true);
         this.actionPoint = this.spriteManager.addSprite(0, Utils.transActionPoint(0), this.textures[6], Utils.madeRectangle(0, 0, 0.023, -0.050*global.ratio), true);
         document.body.style.height = '100vh';
-        let rigthBar =  document.createElement('div');
-        rigthBar.style.position = 'absolute';
-        rigthBar.style.right = '1vw';
-        rigthBar.style.top = '17.7vh';
-        rigthBar.style.height = '80vh';
-        rigthBar.style.width = '8vw';
-        rigthBar.style.backgroundImage = 'url(\'/views/singleplay/textures/right_bar.png\')';
-        rigthBar.style.backgroundSize = '100% 100%';
-        rigthBar.style.backgroundRepeat = 'no-repeat';
-        document.getElementsByClassName('container')[0].appendChild(rigthBar);
         let skillBar = document.createElement('div');
         skillBar.style.position = 'absolute';
         skillBar.style.right = '32.5vw';

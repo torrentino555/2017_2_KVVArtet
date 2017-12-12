@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -387,10 +387,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signup", function() { return signup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "signin", function() { return signin; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseview__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_autheficate_registrationAuth__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__blocks_autheficate_loginAuth__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__blocks_autheficate_registrationAuth__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__blocks_autheficate_loginAuth__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_router__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__servises_user_service__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__servises_user_service__ = __webpack_require__(18);
 
 
 
@@ -747,73 +747,6 @@ class Skill {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class Pathfinding {
-    constructor(start, tiledMap) {
-        this.distance = new Map();
-        this.WIDTH = 16;
-        this.HEIGHT = 12;
-        this.PARTYSIZE = 4;
-        this.ENEMIESSIZE = 2;
-        this.kek = 3;
-        this.NOTWALL = 0;
-        this.WALL = 1;
-        this.tiledMap = tiledMap;
-        this.path = new Map();
-        this.sender = start.getInhabitant();
-        this.frontier = [];
-        this.frontier.push(start);
-        this.path.set(start, null);
-        this.distance.set(start, 0);
-    }
-
-    possibleMoves() {
-        while (this.frontier.length > 0) {
-            let current = this.frontier.shift();
-            if (this.distance.get(current) === this.sender.speed) {
-                break;
-            }
-            let currentNeighbors = this.tileNeighbors(current);
-            for (let i = 0; i < currentNeighbors.length; i++) {
-                if (!this.distance.has(currentNeighbors[i])) {
-                    this.frontier.push(currentNeighbors[i]);
-                    this.path.set(currentNeighbors[i], current);
-                    this.distance.set(currentNeighbors[i], 1 + this.distance.get(current));
-                }
-            }
-        }
-        return this.path;
-    }
-
-    tileNeighbors(current) {
-        let neighbors = [];
-        if (current.xpos + 1 < this.WIDTH && this.tiledMap[current.xpos + 1][current.ypos].isWall === this.NOTWALL && !this.tiledMap[current.xpos + 1][current.ypos].isOccupied()) {
-            neighbors.push(this.tiledMap[current.xpos + 1][current.ypos]);
-        }
-
-        if (current.ypos + 1 < this.HEIGHT && this.tiledMap[current.xpos][current.ypos + 1].isWall === this.NOTWALL && !this.tiledMap[current.xpos][current.ypos + 1].isOccupied()) {
-            neighbors.push(this.tiledMap[current.xpos][current.ypos + 1]);
-        }
-
-        if (current.xpos - 1 >= 0 && this.tiledMap[current.xpos - 1][current.ypos].isWall === this.NOTWALL && !this.tiledMap[current.xpos - 1][current.ypos].isOccupied()) {
-            neighbors.push(this.tiledMap[current.xpos - 1][current.ypos]);
-        }
-
-        if (current.ypos - 1 >= 0 && this.tiledMap[current.xpos][current.ypos - 1].isWall === this.NOTWALL && !this.tiledMap[current.xpos][current.ypos - 1].isOccupied()) {
-            neighbors.push(this.tiledMap[current.xpos][current.ypos - 1]);
-        }
-
-        return neighbors;
-    }
-
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = Pathfinding;
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Shaders__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Program__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Utils__ = __webpack_require__(3);
@@ -888,7 +821,7 @@ class GraphicEngine {
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -920,7 +853,7 @@ class Tile {
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -967,11 +900,11 @@ class Loader {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Tile_js__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Tile_js__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Skill_js__ = __webpack_require__(10);
 
 
@@ -1004,18 +937,18 @@ class Action {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_router__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_mainpage_mainpage__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_login_login__ = __webpack_require__(22);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_signup_registration__ = __webpack_require__(23);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_info_info__ = __webpack_require__(24);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_game_game__ = __webpack_require__(26);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_singleplay_web__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__views_mainpage_mainpage__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__views_login_login__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__views_signup_registration__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__views_info_info__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__views_game_game__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__views_singleplay_web__ = __webpack_require__(27);
 
 
 
@@ -1032,10 +965,10 @@ function requireAll(r) {
 }
 
 __webpack_require__(6);
-__webpack_require__(46);
+__webpack_require__(45);
 
+requireAll(__webpack_require__(46));
 requireAll(__webpack_require__(47));
-requireAll(__webpack_require__(48));
 //requireAll(require.context('./views/', true, /\.(js)$/));
 //requireAll(require.context('./images/', true, /\.(png)$/));
 //requireAll(require.context('./views/singleplay/textures', true, /\.(png)$/));
@@ -1053,7 +986,7 @@ const router = new __WEBPACK_IMPORTED_MODULE_0__modules_router__["default"]();
 router.register('/', mainMenu).register('/login', login).register('/signup', signup).register('/info', info).register('/game', game).register('/singleplay', single).navigate();
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1089,7 +1022,7 @@ let RegistrationValidate = (login, email, password, password_confirm) => {
 /* harmony default export */ __webpack_exports__["a"] = (RegistrationValidate);
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1116,7 +1049,7 @@ let LoginValidate = (login, password) => {
 /* harmony default export */ __webpack_exports__["a"] = (LoginValidate);
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1190,12 +1123,12 @@ class UserService {
 /* harmony default export */ __webpack_exports__["a"] = (UserService);
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseview__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__main_page_css__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__main_page_css__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__main_page_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__main_page_css__);
 
 
@@ -1266,13 +1199,13 @@ class MainPage extends __WEBPACK_IMPORTED_MODULE_0__baseview__["a" /* default */
 /* harmony default export */ __webpack_exports__["a"] = (MainPage);
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1351,7 +1284,7 @@ class Login extends __WEBPACK_IMPORTED_MODULE_0__blocks_block_block__["a" /* def
 /* harmony default export */ __webpack_exports__["a"] = (Login);
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1439,12 +1372,12 @@ class Registration extends __WEBPACK_IMPORTED_MODULE_0__baseview__["a" /* defaul
 /* harmony default export */ __webpack_exports__["a"] = (Registration);
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseview__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__info_css__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__info_css__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__info_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__info_css__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_router__ = __webpack_require__(0);
 
@@ -1485,18 +1418,18 @@ class Info extends __WEBPACK_IMPORTED_MODULE_0__baseview__["a" /* default */] {
 /* harmony default export */ __webpack_exports__["a"] = (Info);
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseview__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_css__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_css__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__game_css__);
 
 
@@ -1529,18 +1462,18 @@ class Game extends __WEBPACK_IMPORTED_MODULE_0__baseview__["a" /* default */] {
 /* harmony default export */ __webpack_exports__["a"] = (Game);
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__baseview__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__DemoGameModule__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__DemoGameModule__ = __webpack_require__(28);
 
 
 
@@ -1548,7 +1481,7 @@ class SinglePlay extends __WEBPACK_IMPORTED_MODULE_0__baseview__["a" /* default 
     constructor() {
         super();
 
-        this.template = __webpack_require__(45);
+        this.template = __webpack_require__(44);
     }
 
     creation() {
@@ -1563,13 +1496,13 @@ class SinglePlay extends __WEBPACK_IMPORTED_MODULE_0__baseview__["a" /* default 
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__InitiativeLine__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Unit__ = __webpack_require__(31);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Pathfinding__ = __webpack_require__(11);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__InitiativeLine__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Unit__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Pathfinding__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Background__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__GameManager__ = __webpack_require__(38);
 
@@ -1785,16 +1718,20 @@ class DemoGameModule {
     }
 
     loseGame() {
-        this.stopGameLoop();
-        document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-        document.getElementById('lose').removeAttribute('hidden');
+        setTimeout(function () {
+            this.stopGameLoop();
+            document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
+            document.getElementById('lose').removeAttribute('hidden');
+        }.bind(this), 1500);
         //createoverlaylose
     }
 
     winGame() {
-        this.stopGameLoop();
-        document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-        document.getElementById('win').removeAttribute('hidden');
+        setTimeout(function () {
+            this.stopGameLoop();
+            document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
+            document.getElementById('win').removeAttribute('hidden');
+        }.bind(this), 1500);
         //createoverlaywin
     }
 
@@ -1909,7 +1846,7 @@ class DemoGameModule {
             path.push(key);
         }
         path.shift();
-        this.gameManager.unitManager.drawActiveTiles(path);
+        this.gameManager.unitManager.setCurrentSkill(0, path);
     }
 
     beginTurn() {
@@ -1929,7 +1866,7 @@ class DemoGameModule {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2002,7 +1939,7 @@ class InitiativeLine {
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2149,13 +2086,80 @@ class Unit {
 
 
 /***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+class Pathfinding {
+    constructor(start, tiledMap) {
+        this.distance = new Map();
+        this.WIDTH = 16;
+        this.HEIGHT = 12;
+        this.PARTYSIZE = 4;
+        this.ENEMIESSIZE = 2;
+        this.kek = 3;
+        this.NOTWALL = 0;
+        this.WALL = 1;
+        this.tiledMap = tiledMap;
+        this.path = new Map();
+        this.sender = start.getInhabitant();
+        this.frontier = [];
+        this.frontier.push(start);
+        this.path.set(start, null);
+        this.distance.set(start, 0);
+    }
+
+    possibleMoves() {
+        while (this.frontier.length > 0) {
+            let current = this.frontier.shift();
+            if (this.distance.get(current) === this.sender.speed) {
+                break;
+            }
+            let currentNeighbors = this.tileNeighbors(current);
+            for (let i = 0; i < currentNeighbors.length; i++) {
+                if (!this.distance.has(currentNeighbors[i])) {
+                    this.frontier.push(currentNeighbors[i]);
+                    this.path.set(currentNeighbors[i], current);
+                    this.distance.set(currentNeighbors[i], 1 + this.distance.get(current));
+                }
+            }
+        }
+        return this.path;
+    }
+
+    tileNeighbors(current) {
+        let neighbors = [];
+        if (current.xpos + 1 < this.WIDTH && this.tiledMap[current.xpos + 1][current.ypos].isWall === this.NOTWALL && !this.tiledMap[current.xpos + 1][current.ypos].isOccupied()) {
+            neighbors.push(this.tiledMap[current.xpos + 1][current.ypos]);
+        }
+
+        if (current.ypos + 1 < this.HEIGHT && this.tiledMap[current.xpos][current.ypos + 1].isWall === this.NOTWALL && !this.tiledMap[current.xpos][current.ypos + 1].isOccupied()) {
+            neighbors.push(this.tiledMap[current.xpos][current.ypos + 1]);
+        }
+
+        if (current.xpos - 1 >= 0 && this.tiledMap[current.xpos - 1][current.ypos].isWall === this.NOTWALL && !this.tiledMap[current.xpos - 1][current.ypos].isOccupied()) {
+            neighbors.push(this.tiledMap[current.xpos - 1][current.ypos]);
+        }
+
+        if (current.ypos - 1 >= 0 && this.tiledMap[current.xpos][current.ypos - 1].isWall === this.NOTWALL && !this.tiledMap[current.xpos][current.ypos - 1].isOccupied()) {
+            neighbors.push(this.tiledMap[current.xpos][current.ypos - 1]);
+        }
+
+        return neighbors;
+    }
+
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Pathfinding;
+
+
+/***/ }),
 /* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GraphicEngine__ = __webpack_require__(12);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GraphicEngine__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Loader__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Loader__ = __webpack_require__(13);
 
 
 
@@ -2439,7 +2443,7 @@ global.ratio = 16 / 9;
 "use strict";
 /* unused harmony export WIDTH */
 /* unused harmony export HEIGHT */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Tile__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Tile__ = __webpack_require__(12);
 
 
 
@@ -2530,16 +2534,14 @@ class DungeonMapMaker {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GraphicEngine__ = __webpack_require__(12);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GraphicEngine__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__SpriteManager__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__State__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Loader__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__AnimationManager__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__UnitManager__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Animation__ = __webpack_require__(44);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__Action__ = __webpack_require__(15);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Loader__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Utils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__AnimationManager__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__UnitManager__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Animation__ = __webpack_require__(43);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Action__ = __webpack_require__(14);
 
 
 
@@ -2554,17 +2556,19 @@ class GameManager {
         this.ratio = 16 / 9;
         this.engine = new __WEBPACK_IMPORTED_MODULE_0__GraphicEngine__["a" /* default */]('canvas', true);
         this.spriteManager = new __WEBPACK_IMPORTED_MODULE_1__SpriteManager__["a" /* default */](this.engine);
-        this.state = new __WEBPACK_IMPORTED_MODULE_2__State__["a" /* default */]();
+        this.state = { state: false };
         this.tiles = [];
         this.fullScreen = false;
+        this.lastI = -1;
+        this.lastJ = -1;
     }
 
     startGameRendering(callback) {
         console.log('work rendering uints');
-        let loaderTextures = new __WEBPACK_IMPORTED_MODULE_3__Loader__["a" /* default */](['/views/singleplay/textures/moveTile.png', '/views/singleplay/textures/activeTile.png', '/views/singleplay/textures/select.png', '/views/singleplay/icons/fullscreen.png', '/views/singleplay/textures/actionBack.png', '/views/singleplay/icons/circle.png', '/views/singleplay/icons/radio2.png', '/views/singleplay/icons/radio1.png', '/views/singleplay/icons/dead.png', '/views/singleplay/textures/greenTile.png', '/views/singleplay/textures/redTile.png'], this.engine.gl);
-        let loaderAnimations = new __WEBPACK_IMPORTED_MODULE_3__Loader__["a" /* default */](['/views/singleplay/animations/fireball.png', '/views/singleplay/animations/Fire 5.png', '/views/singleplay/animations/thunderbolt.png', '/views/singleplay/animations/healing.png', '/views/singleplay/animations/blade_flurry.png', '/views/singleplay/animations/attack.png', '/views/singleplay/animations/holly_wrath.png', '/views/singleplay/animations/activeTile.png'], this.engine.gl);
-        let loaderConditions = new __WEBPACK_IMPORTED_MODULE_3__Loader__["a" /* default */](['/views/singleplay/conditions/WarriorAngry.png', '/views/singleplay/conditions/WarriorAttack.png', '/views/singleplay/conditions/WarriorDead.png', '/views/singleplay/conditions/MageAngry.png', '/views/singleplay/conditions/MageAttack.png', '/views/singleplay/conditions/MageDead.png', '/views/singleplay/conditions/ThiefAngry.png', '/views/singleplay/conditions/ThiefAttack.png', '/views/singleplay/conditions/ThiefDead.png', '/views/singleplay/conditions/PriestAngry.png', '/views/singleplay/conditions/PriestAttack.png', '/views/singleplay/conditions/PriestDead.png', '/views/singleplay/conditions/Skeleton1Angry.png', '/views/singleplay/conditions/Skeleton1Attack.png', '/views/singleplay/conditions/Skeleton1Dead.png', '/views/singleplay/conditions/Skeleton2Angry.png', '/views/singleplay/conditions/Skeleton2Attack.png', '/views/singleplay/conditions/Skeleton2Dead.png'], this.engine.gl);
-        let loaderEntities = new __WEBPACK_IMPORTED_MODULE_3__Loader__["a" /* default */](['/views/singleplay/entity/warrior_portrait.png', '/views/singleplay/entity/mage_portrait.png', '/views/singleplay/entity/thief_portrait.png', '/views/singleplay/entity/priest_portrait.png', '/views/singleplay/entity/skeleton1_portrait.png', '/views/singleplay/entity/skeleton2_portrait.png', '/views/singleplay/entity/warrior.png', '/views/singleplay/entity/mage.png', '/views/singleplay/entity/thief.png', '/views/singleplay/entity/priest.png', '/views/singleplay/entity/skeleton1.png', '/views/singleplay/entity/skeleton2.png'], this.engine.gl);
+        let loaderTextures = new __WEBPACK_IMPORTED_MODULE_2__Loader__["a" /* default */](['/views/singleplay/textures/moveTile.png', '/views/singleplay/textures/activeTile.png', '/views/singleplay/textures/select.png', '/views/singleplay/icons/fullscreen.png', '/views/singleplay/textures/actionBack.png', '/views/singleplay/icons/circle.png', '/views/singleplay/icons/radio2.png', '/views/singleplay/icons/radio1.png', '/views/singleplay/icons/dead.png', '/views/singleplay/textures/greenTile.png', '/views/singleplay/textures/redTile.png'], this.engine.gl);
+        let loaderAnimations = new __WEBPACK_IMPORTED_MODULE_2__Loader__["a" /* default */](['/views/singleplay/animations/fireball.png', '/views/singleplay/animations/Fire 5.png', '/views/singleplay/animations/thunderbolt.png', '/views/singleplay/animations/healing.png', '/views/singleplay/animations/blade_flurry.png', '/views/singleplay/animations/attack.png', '/views/singleplay/animations/holly_wrath.png', '/views/singleplay/animations/activeTile.png'], this.engine.gl);
+        let loaderConditions = new __WEBPACK_IMPORTED_MODULE_2__Loader__["a" /* default */](['/views/singleplay/conditions/WarriorAngry.png', '/views/singleplay/conditions/WarriorAttack.png', '/views/singleplay/conditions/WarriorDead.png', '/views/singleplay/conditions/MageAngry.png', '/views/singleplay/conditions/MageAttack.png', '/views/singleplay/conditions/MageDead.png', '/views/singleplay/conditions/ThiefAngry.png', '/views/singleplay/conditions/ThiefAttack.png', '/views/singleplay/conditions/ThiefDead.png', '/views/singleplay/conditions/PriestAngry.png', '/views/singleplay/conditions/PriestAttack.png', '/views/singleplay/conditions/PriestDead.png', '/views/singleplay/conditions/Skeleton1Angry.png', '/views/singleplay/conditions/Skeleton1Attack.png', '/views/singleplay/conditions/Skeleton1Dead.png', '/views/singleplay/conditions/Skeleton2Angry.png', '/views/singleplay/conditions/Skeleton2Attack.png', '/views/singleplay/conditions/Skeleton2Dead.png'], this.engine.gl);
+        let loaderEntities = new __WEBPACK_IMPORTED_MODULE_2__Loader__["a" /* default */](['/views/singleplay/entity/warrior_portrait.png', '/views/singleplay/entity/mage_portrait.png', '/views/singleplay/entity/thief_portrait.png', '/views/singleplay/entity/priest_portrait.png', '/views/singleplay/entity/skeleton1_portrait.png', '/views/singleplay/entity/skeleton2_portrait.png', '/views/singleplay/entity/warrior.png', '/views/singleplay/entity/mage.png', '/views/singleplay/entity/thief.png', '/views/singleplay/entity/priest.png', '/views/singleplay/entity/skeleton1.png', '/views/singleplay/entity/skeleton2.png'], this.engine.gl);
         loaderTextures.load(textures => {
             loaderAnimations.load(animations => {
                 loaderConditions.load(conditions => {
@@ -2572,9 +2576,9 @@ class GameManager {
                         this.textures = textures;
                         this.initGui();
                         this.initEvents();
-                        let animation = new __WEBPACK_IMPORTED_MODULE_7__Animation__["a" /* default */](this);
-                        this.animtaionManager = new __WEBPACK_IMPORTED_MODULE_5__AnimationManager__["a" /* default */](animation, this.spriteManager, this.activeTile, this.actionPoint, this.state, animations, this.textures[7]);
-                        this.unitManager = new __WEBPACK_IMPORTED_MODULE_6__UnitManager__["a" /* default */](animation, this.animtaionManager, this.spriteManager, this.activeTile, this.actionPoint, this.state, entities, textures, conditions);
+                        let animation = new __WEBPACK_IMPORTED_MODULE_6__Animation__["a" /* default */](this);
+                        this.animtaionManager = new __WEBPACK_IMPORTED_MODULE_4__AnimationManager__["a" /* default */](animation, this.spriteManager, this.activeTile, this.actionPoint, this.state, animations, this.textures[7]);
+                        this.unitManager = new __WEBPACK_IMPORTED_MODULE_5__UnitManager__["a" /* default */](animation, this.animtaionManager, this.spriteManager, this.activeTile, this.actionPoint, this.state, entities, textures, conditions);
                         this.engine.render();
                     }, callback);
                 });
@@ -2594,25 +2598,22 @@ class GameManager {
                 this.spriteManager.deleteSprite(tile);
             }.bind(this));
             this.tiles = [];
-            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.AnimationOnMap) {
+            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
                 let i = Math.floor((x - xMin) / 0.6 / (1 / 16));
                 let j = Math.floor((y - yMin) / 0.8 / (1 / 12));
-                if (i < 16 && j < 12 && this.unitManager.massiveSkill) {
+                if (i !== this.lastI && j !== this.lastJ && i < 16 && j < 12 && this.unitManager.massiveSkill) {
                     let halfArea = Math.floor(this.unitManager.activeSkill.area / 2) + 1;
+                    let tiles = [];
                     for (let ii = i - halfArea; ii <= i + halfArea; ii++) {
                         for (let jj = j - halfArea; jj <= j + halfArea; jj++) {
                             if (ii >= 0 && ii < 16 && jj >= 0 && jj < 12) {
-                                this.tiles.push(this.spriteManager.addSprite(-2, __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].translationOnMap(jj, ii), this.textures[10], __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true));
+                                tiles.push(global.tiledMap[ii][jj]);
                             }
                         }
                     }
-                    this.unitManager.units.forEach(unit => {
-                        this.spriteManager.getSprite(unit.entity.mapId).order = unit.ypos;
-                        this.spriteManager.getSprite(unit.entity.healthbarId).order = unit.ypos;
-                    });
-                    this.spriteManager.sortSprites();
+                    this.unitManager.drawActiveTiles(tiles);
                 } else if (i < 16 && j < 12 && global.tiledMap[i][j].active) {
-                    this.spriteManager.getSprite(this.activeElem).setTrans(__WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].translationOnMap(j, i));
+                    this.spriteManager.getSprite(this.activeElem).setTrans(__WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].translationOnMap(j, i));
                 } else {
                     this.spriteManager.getSprite(this.activeElem).setTrans([-2, -2]);
                 }
@@ -2632,7 +2633,7 @@ class GameManager {
                 }
             }
             if (x >= 0.2 && x <= 0.3 && y <= 0.05) {
-                let action = new __WEBPACK_IMPORTED_MODULE_8__Action__["a" /* default */]();
+                let action = new __WEBPACK_IMPORTED_MODULE_7__Action__["a" /* default */]();
                 action.sender = null;
                 action.target = null;
                 action.ability = null;
@@ -2642,21 +2643,11 @@ class GameManager {
     }
 
     initGui() {
-        this.activeTile = this.spriteManager.addSprite(-0.9, [-2, 3], this.textures[1], __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
-        this.activeElem = this.spriteManager.addSprite(-1, [-2, 3], this.textures[2], __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
-        this.spriteManager.addSprite(1, [0.95, -1 + 0.05 * this.ratio], this.textures[3], __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].madeRectangle(0, 0, 0.05, -0.05 * this.ratio), true);
-        this.actionPoint = this.spriteManager.addSprite(0, __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].transActionPoint(0), this.textures[6], __WEBPACK_IMPORTED_MODULE_4__Utils__["a" /* default */].madeRectangle(0, 0, 0.023, -0.050 * global.ratio), true);
+        this.activeTile = this.spriteManager.addSprite(-0.9, [-2, 3], this.textures[1], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
+        this.activeElem = this.spriteManager.addSprite(-1, [-2, 3], this.textures[2], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
+        this.spriteManager.addSprite(1, [0.95, -1 + 0.05 * this.ratio], this.textures[3], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 0.05, -0.05 * this.ratio), true);
+        this.actionPoint = this.spriteManager.addSprite(0, __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].transActionPoint(0), this.textures[6], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 0.023, -0.050 * global.ratio), true);
         document.body.style.height = '100vh';
-        let rigthBar = document.createElement('div');
-        rigthBar.style.position = 'absolute';
-        rigthBar.style.right = '1vw';
-        rigthBar.style.top = '17.7vh';
-        rigthBar.style.height = '80vh';
-        rigthBar.style.width = '8vw';
-        rigthBar.style.backgroundImage = 'url(\'/views/singleplay/textures/right_bar.png\')';
-        rigthBar.style.backgroundSize = '100% 100%';
-        rigthBar.style.backgroundRepeat = 'no-repeat';
-        document.getElementsByClassName('container')[0].appendChild(rigthBar);
         let skillBar = document.createElement('div');
         skillBar.style.position = 'absolute';
         skillBar.style.right = '32.5vw';
@@ -2730,20 +2721,6 @@ class SpriteManager {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-class State {
-  constructor() {
-    this.AnimationOnMap = false;
-    this.AnimationOnLowbar = false;
-  }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = State;
-
-
-/***/ }),
-/* 41 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Utils__ = __webpack_require__(3);
 
 class AnimationManager {
@@ -2755,23 +2732,23 @@ class AnimationManager {
         this.activeTile = activeTile;
         this.actionPoint = actionPoint;
         this.animations = animations;
-        // this.activetile = this.spriteManager.addSprite(12, [-2, -2], this.animations[7], Utils.madeRectangle(0, 0, 1.2 / 16 + 0.04, (1.2/16)*global.ratio - 0.06), true,
-        //     Utils.madeRectangle(0, 0, 1/5, -1/4));
-        // this.loopActiveTile();
     }
 
     stateCheck(callback) {
-        if (this.state.AnimationOnMap) {
+        if (this.state.state) {
             setTimeout(function () {
                 requestAnimationFrame(callback);
             }, 50);
             return true;
         }
-        this.state.AnimationOnMap = true;
+        this.state.state = true;
     }
 
     movingTo(TileStart, path) {
         if (this.stateCheck(this.movingTo.bind(this, TileStart, path))) {
+            return;
+        }
+        if (!TileStart.unitOnTile) {
             return;
         }
         this.spriteManager.getSprite(this.actionPoint).setTexture(this.texture);
@@ -2792,7 +2769,7 @@ class AnimationManager {
             if (transActiveTile == this.spriteManager.getSprite(this.activeTile).getTrans()) {
                 this.spriteManager.getSprite(this.activeTile).setTrans(__WEBPACK_IMPORTED_MODULE_0__Utils__["a" /* default */].translationOnMap(unit.ypos, unit.xpos));
             }
-            this.state.AnimationOnMap = false;
+            this.state.state = false;
         }.bind(this), 200 * path.length);
     }
 
@@ -2842,13 +2819,6 @@ class AnimationManager {
         this.Animation.MoveAnimation(__WEBPACK_IMPORTED_MODULE_0__Utils__["a" /* default */].translationForUnits(sender), __WEBPACK_IMPORTED_MODULE_0__Utils__["a" /* default */].translationOnMap(target.ypos - 1, target.xpos - 1), timeA, holly_wrathId);
     }
 
-    loopActiveTile() {
-        this.Animation.FrameAnimation(this.activetile, 1, 11, 5, 4);
-        setTimeout(function () {
-            this.loopActiveTile();
-        }.bind(this), 1000);
-    }
-
     animationActiveTile(unit) {
         let trans = __WEBPACK_IMPORTED_MODULE_0__Utils__["a" /* default */].transForHealthbar(unit);
         this.spriteManager.getSprite(this.activetile).setTrans([trans[0] - 0.02, trans[1] - 0.01]);
@@ -2858,15 +2828,13 @@ class AnimationManager {
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Entity__ = __webpack_require__(43);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Entity__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Action__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Pathfinding__ = __webpack_require__(11);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Action__ = __webpack_require__(14);
 
 
 
@@ -2887,7 +2855,6 @@ class UnitManager {
         this.actionPoint = actionPoint;
         this.activeIndex = 0;
         this.possibleMoves = [];
-        this.dropMenu = 0;
         this.state = state;
         this.indexUnit = {
             warrior: 0,
@@ -2901,13 +2868,14 @@ class UnitManager {
     }
 
     stateCheck(callback) {
-        if (this.state.AnimationOnLowbar) {
+        console.log(this.state);
+        if (this.state.state) {
             setTimeout(function () {
                 requestAnimationFrame(callback);
             }, 50);
             return true;
         }
-        this.state.AnimationOnLowbar = true;
+        this.state.state = true;
     }
 
     timeAndRunSkill(nameSkill, sender, target, runAnimation, wounded) {
@@ -2981,49 +2949,7 @@ class UnitManager {
         this.units.push(unit);
     }
 
-    updateSkillbar(name, sender, target) {
-        if (this.skillbar.length + 1 > 7) {
-            this.skillbar.pop();
-            document.getElementById(6).remove();
-            document.getElementById(6 + 'box').remove();
-        }
-        this.skillbar.forEach(function (skill, i) {
-            let elem = document.getElementById(i + 'box');
-            elem.id = i + 1 + 'box';
-            let trans = [parseFloat(elem.style.right.substring(0, elem.style.right.length - 2)), parseFloat(elem.style.top.substring(0, elem.style.top.length - 2))];
-            this.Animation.MoveHtmlAnimation(elem, trans, [trans[0], trans[1] + 10], 0.5);
-            elem = document.getElementById(i);
-            elem.id = i + 1;
-            trans = [parseFloat(elem.style.right.substring(0, elem.style.right.length - 2)), parseFloat(elem.style.top.substring(0, elem.style.top.length - 2))];
-            this.Animation.MoveHtmlAnimation(elem, trans, [trans[0], trans[1] + 10], 0.5);
-        }.bind(this));
-        this.skillbar.unshift(name);
-        setTimeout(function () {
-            let skillBox = document.createElement('img');
-            skillBox.id = 0 + 'box';
-            skillBox.style.position = 'absolute';
-            skillBox.style.right = 3.4 + 'vw';
-            skillBox.style.top = 24.72 + 'vh';
-            skillBox.style.width = '3.6vw';
-            skillBox.style.height = '6.3vh';
-            skillBox.src = '/views/singleplay/textures/skillBox.png';
-            document.getElementsByClassName('container')[0].appendChild(skillBox);
-            let skillImg = document.createElement('img');
-            skillImg.id = 0;
-            if (target.isOccupied()) {
-                skillImg.title = sender.unitOnTile.class + ' attack ' + target.unitOnTile.class;
-            } else {
-                skillImg.title = sender.unitOnTile.class + ' attack ' + target.xpos + ':' + target.ypos + ' cell';
-            }
-            skillImg.style.position = 'absolute';
-            skillImg.style.right = 3.8 + 'vw';
-            skillImg.style.top = 25.5 + 'vh';
-            skillImg.style.width = '2.7vw';
-            skillImg.style.height = '4.6vh';
-            skillImg.src = '/views/singleplay/icons/' + name + '.png';
-            document.getElementsByClassName('container')[0].appendChild(skillImg);
-        }, 500);
-    }
+    updateSkillbar(name, sender, target) {}
 
     neighbors(sender, target) {
         console.log("sender" + sender + " target" + target + " neighvoors?");
@@ -3102,108 +3028,92 @@ class UnitManager {
             let xMax = xMin + 0.6;
             let yMin = (1 - global.mapShiftY) / 2;
             let yMax = yMin + 0.8;
-            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && this.dropMenu === 0 && !this.state.AnimationOnMap) {
+            console.log('STATE: ' + this.state.state);
+            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
                 let i = Math.floor((x - xMin) / 0.6 / (1 / 16));
                 let j = Math.floor((y - yMin) / 0.8 / (1 / 12));
-                let div = document.createElement('div');
-                this.dropMenu = div;
-                let ul = document.createElement('ul');
-                div.className = 'drop-menu';
-                div.style.left = event.clientX - 40 + 'px';
-                div.style.top = event.clientY - 15 + 'px';
-                div.appendChild(ul);
-                let elem = global.tiledMap[i][j];
-                let func = function (item) {
-                    let li = document.createElement('li');
-                    li.innerHTML = item.name;
-                    li.onclick = function () {
-                        let action = new __WEBPACK_IMPORTED_MODULE_2__Action__["a" /* default */]();
-                        action.sender = global.tiledMap[unit.xpos][unit.ypos];
-                        action.target = global.tiledMap[i][j];
-                        action.ability = item;
-                        global.actionDeque.push(action);
-                        this.dropMenu.remove();
-                        this.dropMenu = 0;
-                    }.bind(this);
-                    ul.appendChild(li);
-                }.bind(this);
-
-                if (elem.isOccupied() && elem.unitOnTile.type === unit.type) {
-                    console.log('Союзник');
-                    unit.skills.forEach(function (item) {
-                        if (item.damage[0] < 0) {
-                            func(item);
-                        }
-                    });
-                } else if (elem.isOccupied() && elem.unitOnTile.type !== unit.type && (unit.shooter || this.neighbors(global.tiledMap[unit.xpos][unit.ypos], elem))) {
-                    console.log('Противник');
-                    unit.skills.forEach(function (item) {
-                        if (item.damage[0] > 0) {
-                            func(item);
-                        }
-                    });
-                } else {
-                    console.log('Карта');
-                    unit.skills.forEach(function (item) {
-                        if (item.typeOfArea === 'circle') {
-                            func(item);
-                        }
-                    });
-                    if (elem.active) {
-                        let li = document.createElement('li');
-                        li.innerHTML = 'Move';
-                        li.onclick = function () {
-                            let action = new __WEBPACK_IMPORTED_MODULE_2__Action__["a" /* default */]();
-                            action.sender = global.tiledMap[unit.xpos][unit.ypos];
-                            action.target = global.tiledMap[i][j];
-                            action.ability = null;
-                            global.actionDeque.push(action);
-                            this.dropMenu.remove();
-                            this.dropMenu = 0;
-                        }.bind(this);
-                        ul.appendChild(li);
+                if (global.tiledMap[i][j].active || this.massiveSkill) {
+                    let action = new __WEBPACK_IMPORTED_MODULE_2__Action__["a" /* default */]();
+                    action.sender = global.tiledMap[unit.xpos][unit.ypos];
+                    action.target = global.tiledMap[i][j];
+                    action.ability = this.activeSkill.name === 'Move' ? null : this.activeSkill;
+                    global.actionDeque.push(action);
+                    if (this.massiveSkill) {
+                        this.deleteLastActiveTiles();
                     }
                 }
-                document.getElementsByClassName('container')[0].appendChild(div);
-            } else if (event.which === 1 && this.dropMenu !== 0 && event.target.tagName !== 'LI') {
-                this.dropMenu.remove();
-                this.dropMenu = 0;
             } else if (event.which === 1 && x >= 0.33 && x <= 0.675 && y >= 0 && y <= 0.07) {
                 let i = Math.floor((x - 0.33) / (0.35 / 10));
-                if (i === 0) {
-                    this.drawActiveTiles(this.path, true);
-                    this.massiveSkill = false;
-                } else if (this.currentUnit.skills[i].typeOfArea === 'circle') {
-                    this.possibleMoves.forEach(function (move) {
-                        global.tiledMap[move.xpos][move.ypos].active = false;
-                        this.spriteManager.deleteSprite(move.id);
-                    }.bind(this));
-                    this.massiveSkill = true;
-                } else {
-                    this.massiveSkill = false;
-                    let tiles = getActiveTiles(global.tiledMap[this.currentUnit.xpos][this.currentUnit.ypos], this.currentUnit.skills[i]);
-                    this.drawActiveTiles(tiles, true);
-                }
-                this.activeSkill = this.currentUnit.skills[i];
-                let activeSkill = document.getElementById('activeSkill');
-                activeSkill.style.left = 32.5 + 35 / 10 * i + 'vw';
+                this.setCurrentSkill(i);
             }
             return false;
         }.bind(this);
     }
 
-    drawActiveTiles(tiles, rewritePathOrNot) {
-        if (!rewritePathOrNot) {
-            this.path = tiles;
+    setCurrentSkill(i, path) {
+        if (this.stateCheck(this.setCurrentSkill.bind(this, i, path))) {
+            return;
         }
+        this.state.state = false;
+        if (path) {
+            this.path = path;
+        }
+        if (i >= this.currentUnit.skills.length) {
+            return;
+        }
+        if (i === 0) {
+            this.drawActiveTiles(this.path);
+            this.massiveSkill = false;
+        } else if (this.currentUnit.skills[i].typeOfArea === 'circle') {
+            this.possibleMoves.forEach(function (move) {
+                global.tiledMap[move.xpos][move.ypos].active = false;
+                this.spriteManager.deleteSprite(move.id);
+            }.bind(this));
+            this.massiveSkill = true;
+        } else {
+            this.massiveSkill = false;
+            let tiles = this.getActiveTiles(global.tiledMap[this.currentUnit.xpos][this.currentUnit.ypos], this.currentUnit.skills[i]);
+            this.drawActiveTiles(tiles);
+        }
+        this.activeSkill = this.currentUnit.skills[i];
+        let activeSkill = document.getElementById('activeSkill');
+        activeSkill.style.left = 32.5 + 35 / 10 * i + 'vw';
+    }
+
+    getActiveTiles(x, y) {
+        let result = [];
+        this.units.forEach(unit => {
+            if (y.damage[0] > 0) {
+                if (unit.type !== x.unitOnTile.type && !unit.isDead()) {
+                    if (this.currentUnit.shooter || Math.abs(this.currentUnit.xpos - unit.xpos) <= 1 && Math.abs(this.currentUnit.ypos - unit.ypos) <= 1) {
+                        result.push(global.tiledMap[unit.xpos][unit.ypos]);
+                    }
+                }
+            } else {
+                if (unit.type === x.unitOnTile.type && !unit.isDead()) {
+                    if (this.currentUnit.shooter || Math.abs(this.currentUnit.xpos - unit.xpos) <= 1 && Math.abs(this.currentUnit.ypos - unit.ypos) <= 1) {
+                        result.push(global.tiledMap[unit.xpos][unit.ypos]);
+                    }
+                }
+            }
+        });
+        return result;
+    }
+
+    deleteLastActiveTiles() {
         this.possibleMoves.forEach(function (move) {
             global.tiledMap[move.xpos][move.ypos].active = false;
             this.spriteManager.deleteSprite(move.id);
         }.bind(this));
         this.possibleMoves = [];
+    }
+
+    drawActiveTiles(tiles) {
+        this.deleteLastActiveTiles();
         tiles.forEach(function (tile) {
+            console.log(tile.unitOnTile);
             this.possibleMoves.push({
-                id: this.spriteManager.addSprite(-2, __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].translationOnMap(tile.ypos, tile.xpos), tile.unitOnTile ? tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10] : this.textures[0], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
+                id: this.spriteManager.addSprite(-2, __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].translationOnMap(tile.ypos, tile.xpos), tile.unitOnTile && !tile.unitOnTile.isDead() ? tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10] : this.textures[0], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
                 xpos: tile.xpos,
                 ypos: tile.ypos
             });
@@ -3217,6 +3127,7 @@ class UnitManager {
     }
 
     unitAttack(nameSkill, sender, target, wounded) {
+        this.state.state = true;
         this.spriteManager.getSprite(this.actionPoint).setTexture(this.textures[7]);
         this.updateSkillbar(nameSkill, sender, target);
         let index = this.indexUnit[sender.unitOnTile.class];
@@ -3230,6 +3141,7 @@ class UnitManager {
                     this.spriteManager.getSprite(sender.unitOnTile.entity.mapId).setTexture(this.entities[6 + index]);
                 }
                 this.updateHealth(wounded);
+                this.state.state = false;
             }.bind(this, sender, target), timer + 100);
         }.bind(this, nameSkill, sender, target), 500);
     }
@@ -3242,6 +3154,7 @@ class UnitManager {
             DeadUnits.forEach(unit => {
                 this.spriteManager.getSprite(unit.entity.lowbarId).setTexture(this.textures[8]);
                 this.spriteManager.getSprite(unit.entity.mapId).setTexture(this.conditions[2 + 3 * this.indexUnit[unit.class]]);
+                this.spriteManager.getSprite(unit.entity.lowbarHealthId).setVertexs(__WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 0, 0));
                 this.spriteManager.getSprite(unit.entity.healthbarId).setVertexs(__WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 0, 0));
             });
         }, timer + 800);
@@ -3252,7 +3165,7 @@ class UnitManager {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3267,7 +3180,7 @@ class Entity {
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3347,19 +3260,19 @@ class Animation {
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <img hidden id=\"win\" style=\"position:absolute;width: 100vw; height: 100vh;\" src=\"/views/singleplay/textures/win.png\">\n  <img hidden id=\"lose\" style=\"position:absolute;width: 100vw; height: 100vh;\" src=\"/views/singleplay/textures/lose.png\">\n  </img>\n</body>\n\n</html>\n";
 
 /***/ }),
-/* 46 */
+/* 45 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 47 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -3379,14 +3292,14 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 47;
+webpackContext.id = 46;
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./event-bus.js": 49,
+	"./event-bus.js": 48,
 	"./http.js": 7,
 	"./router.js": 0
 };
@@ -3404,10 +3317,10 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 48;
+webpackContext.id = 47;
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports) {
 
 
