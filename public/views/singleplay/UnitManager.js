@@ -7,13 +7,13 @@ export default class UnitManager {
     constructor(Animation, animationManager, spriteManager, activeTile, actionPoint, state, entities, textures, conditions) {
         this.Animation = Animation;
         this.units = [];
-        this.ratio = 16/9;
         this.spriteManager = spriteManager;
         this.animationManager = animationManager;
         this.entities = entities;
         this.textures = textures;
         this.conditions = conditions;
         this.firstActiveUnit = true;
+        this.massiveSkill = false;
         this.activeTile = activeTile;
         this.circle = spriteManager.addSprite(0, Utils.transActiveCircle(0), this.textures[5], Utils.madeRectangle(0, 0, 0.015, -0.015*global.ratio), true);
         this.actionPoint = actionPoint;
@@ -96,8 +96,10 @@ export default class UnitManager {
     updateHealth(wounded) {
         wounded.forEach(function(item) {
             if (item.healthpoint[0] > 0) {
+                this.spriteManager.getSprite(item.entity.lowbarHealthId).setVertexs(Utils.madeRectangle(0, 0, (1.2 / 16) * (item.healthpoint[0] / item.healthpoint[1]) - 0.006, -0.015));
                 this.spriteManager.getSprite(item.entity.healthbarId).setVertexs(Utils.madeRectangle(0, 0, (1.2 / 16) * (item.healthpoint[0] / item.healthpoint[1]) - 0.006, -0.015));
             } else {
+                this.spriteManager.getSprite(item.entity.lowbarHealthId).setVertexs(Utils.madeRectangle(0, 0, 0, 0));
                 this.spriteManager.getSprite(item.entity.healthbarId).setVertexs(Utils.madeRectangle(0, 0, 0, 0));
             }
         }.bind(this));
@@ -105,59 +107,14 @@ export default class UnitManager {
 
     addUnit(unit) {
         unit.entity = new Entity();
-        unit.entity.lowbarId = this.spriteManager.addSprite(0, Utils.transOnLowbar(this.units.length), this.entities[this.indexUnit[unit.class]], Utils.madeRectangle(0, 0, 0.075, -0.075 * this.ratio), true);
-        unit.entity.mapId = this.spriteManager.addSprite(unit.ypos, Utils.translationForUnits(unit), this.entities[6 + this.indexUnit[unit.class]], Utils.madeRectangle(0, 0, (1.2 / 9) * 1.7, -(1.2 / 9) * 1.7 * this.ratio), true);
+        unit.entity.lowbarId = this.spriteManager.addSprite(0, Utils.transOnLowbar(this.units.length), this.entities[this.indexUnit[unit.class]], Utils.madeRectangle(0, 0, 0.075, -0.075 * global.ratio), true);
+        unit.entity.mapId = this.spriteManager.addSprite(unit.ypos, Utils.translationForUnits(unit), this.entities[6 + this.indexUnit[unit.class]], Utils.madeRectangle(0, 0, (1.2 / 9) * 1.7, -(1.2 / 9) * 1.7 * global.ratio), true);
         unit.entity.lowbarHealthId = this.spriteManager.addColorSprite(0, Utils.transOnLowbarHealth(this.units.length), Utils.madeRectangle(0, 0, 0.075, -0.015), [250 / 255, 44 / 255, 31 / 255, 1.0]);
         unit.entity.healthbarId = this.spriteManager.addColorSprite(unit.ypos, Utils.transForHealthbar(unit), Utils.madeRectangle(0, 0, 1.2 / 16 - 0.006, -0.015), [250 / 255, 44 / 255, 31 / 255, 1.0]);
         this.units.push(unit);
     }
 
-    changeActiveUnit() {
-        if (this.stateCheck(this.changeActiveUnit.bind(this))) {
-            return;
-        }
-
-
-
-
-
-
-        let t = Utils.transOnLowbar(0);
-        this.Animation.MoveAnimation(t, [t[0], t[1] + 0.17], 0.5, this.units[this.units.length - 1].entity.lowbarId);
-        for (let i = 0; i < this.units.length - 1; i++) {
-            this.Animation.MoveAnimation(Utils.transOnLowbar(i + 1), Utils.transOnLowbar(i),
-                0.8, this.units[i].entity.lowbarId);
-        }
-        setTimeout(function() {
-            let t = Utils.transOnLowbar(0);
-            this.Animation.MoveAnimation([t[0], t[1] + 0.17], [t[0] + (this.units.length - 1) * 0.1, t[1] + 0.17], 0.5, this.units[this.units.length - 1].entity.lowbarId);
-        }.bind(this), 600);
-        setTimeout(function() {
-            let t = Utils.transOnLowbar(this.units.length - 1);
-            this.Animation.MoveAnimation([t[0], t[1] + 0.17], t, 0.5, this.units[this.units.length - 1].entity.lowbarId);
-        }.bind(this), 1120);
-        setTimeout(function() {
-            this.state.AnimationOnLowbar = false;
-        }.bind(this), 1650);
-    }
-
-    removeUnitsInInitiativeLine(units) {
-        if (this.stateCheck(this.removeUnitsInInitiativeLine.bind(this, units))) {
-            return;
-        }
-        units.forEach(function(unit) {
-            this.units.splice(this.units.indexOf(unit), 1);
-            this.spriteManager.deleteSprite(unit.entity.lowbarId);
-        }.bind(this));
-        this.units.forEach(function(unit, i) {
-            this.Animation.MoveAnimation(this.spriteManager.getSprite(unit.entity.lowbarId).getTrans(), Utils.transOnLowbar(i), 0.5, unit.entity.lowbarId);
-        }.bind(this));
-        setTimeout(function() {
-            this.state.AnimationOnLowbar = false;
-        }.bind(this), 510);
-    }
-
-    updateSkillbar(name) {
+    updateSkillbar(name, sender, target) {
         if (this.skillbar.length + 1 > 7) {
             this.skillbar.pop();
             document.getElementById(6).remove();
@@ -186,6 +143,11 @@ export default class UnitManager {
             document.getElementsByClassName('container')[0].appendChild(skillBox);
             let skillImg = document.createElement('img');
             skillImg.id = 0;
+            if(target.isOccupied()) {
+                skillImg.title = sender.unitOnTile.class + ' attack ' + target.unitOnTile.class;
+            } else {
+                skillImg.title = sender.unitOnTile.class + ' attack ' + target.xpos + ':' + target.ypos + ' cell';
+            }
             skillImg.style.position = 'absolute';
             skillImg.style.right = 3.8 + 'vw';
             skillImg.style.top = 25.5 + 'vh';
@@ -224,7 +186,8 @@ export default class UnitManager {
         } else {
             // this.changeActiveUnit(unit);
         }
-
+        this.currentUnit = unit;
+        this.massiveSkill = false;
         let skills = document.getElementsByClassName('skill');
         for (let i = skills.length - 1; i >= 0; i--) {
             skills[i].remove();
@@ -239,13 +202,16 @@ export default class UnitManager {
             activeSkillImg.style.width = '3.7vw';
             activeSkillImg.style.height = 3.7*global.ratio + 'vh';
             activeSkillImg.src = '/views/singleplay/textures/activeTile.png';
+            this.activeSkill = unit.skills[0];
             document.getElementsByClassName('container')[0].appendChild(activeSkillImg);
         } else {
+            this.activeSkill = unit.skills[0];
             activeSkillImg.style.left = 32.5 + 'vw';
         }
         unit.skills.forEach(function(skill, i) {
             console.log(skill.name);
             let skillImg = document.createElement('img');
+            skillImg.title = skill.getDesciption();
             skillImg.className = 'skill';
             skillImg.style.position = 'absolute';
             skillImg.style.top = '1.1vh';
@@ -338,13 +304,57 @@ export default class UnitManager {
             } else if (event.which === 1 && this.dropMenu !== 0 && event.target.tagName !== 'LI') {
                 this.dropMenu.remove();
                 this.dropMenu = 0;
+            } else if (event.which === 1 && x >= 0.33 && x <= 0.675 && y >= 0 && y <= 0.07) {
+                let i = Math.floor((x - 0.33)/(0.35/10));
+                if (i === 0) {
+                    this.drawActiveTiles(this.path, true);
+                    this.massiveSkill = false;
+                } else if (this.currentUnit.skills[i].typeOfArea === 'circle') {
+                    this.possibleMoves.forEach(function(move) {
+                        global.tiledMap[move.xpos][move.ypos].active = false;
+                        this.spriteManager.deleteSprite(move.id);
+                    }.bind(this));
+                    this.massiveSkill = true;
+                } else {
+                    this.massiveSkill = false;
+                    let tiles = getActiveTiles(global.tiledMap[this.currentUnit.xpos][this.currentUnit.ypos], this.currentUnit.skills[i]);
+                    this.drawActiveTiles(tiles, true);
+                }
+                this.activeSkill = this.currentUnit.skills[i];
+                let activeSkill = document.getElementById('activeSkill');
+                activeSkill.style.left = 32.5 + (35/10)*i + 'vw';
             }
+            return false;
         }.bind(this);
+    }
+
+    drawActiveTiles(tiles, rewritePathOrNot) {
+        if (!rewritePathOrNot) {
+            this.path = tiles;
+        }
+        this.possibleMoves.forEach(function(move) {
+            global.tiledMap[move.xpos][move.ypos].active = false;
+            this.spriteManager.deleteSprite(move.id);
+        }.bind(this));
+        this.possibleMoves = [];
+        tiles.forEach(function(tile) {
+            this.possibleMoves.push({
+                id: this.spriteManager.addSprite(-2, Utils.translationOnMap(tile.ypos, tile.xpos), tile.unitOnTile ? (tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10]) : this.textures[0], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
+                xpos: tile.xpos,
+                ypos: tile.ypos
+            });
+            global.tiledMap[tile.xpos][tile.ypos].active = true;
+        }.bind(this));
+        this.units.forEach((unit) => {
+            this.spriteManager.getSprite(unit.entity.mapId).order = unit.ypos;
+            this.spriteManager.getSprite(unit.entity.healthbarId).order = unit.ypos;
+        });
+        this.spriteManager.sortSprites();
     }
 
     unitAttack(nameSkill, sender, target, wounded) {
         this.spriteManager.getSprite(this.actionPoint).setTexture(this.textures[7]);
-        this.updateSkillbar(nameSkill);
+        this.updateSkillbar(nameSkill, sender, target);
         let index = this.indexUnit[sender.unitOnTile.class];
         this.spriteManager.getSprite(sender.unitOnTile.entity.mapId).setTexture(this.conditions[3 * index]);
         let timer = this.timeAndRunSkill(nameSkill, sender, target, true, wounded);
@@ -366,30 +376,10 @@ export default class UnitManager {
         setTimeout(() => {
             // this.removeUnitsInInitiativeLine(DeadUnits);
             DeadUnits.forEach((unit) => {
+                this.spriteManager.getSprite(unit.entity.lowbarId).setTexture(this.textures[8]);
                 this.spriteManager.getSprite(unit.entity.mapId).setTexture(this.conditions[2 + 3 * this.indexUnit[unit.class]]);
                 this.spriteManager.getSprite(unit.entity.healthbarId).setVertexs(Utils.madeRectangle(0, 0, 0, 0));
             });
         }, timer + 800);
-    }
-
-    showPossibleMoves(path) {
-        for (let i = 0; i < this.possibleMoves.length; i++) {
-            global.tiledMap[this.possibleMoves[i].xpos][this.possibleMoves[i].ypos].active = false;
-            this.spriteManager.deleteSprite(this.possibleMoves[i].id);
-        }
-        this.possibleMoves = [];
-        for (let i = 0; i < path.length; i++) {
-            this.possibleMoves.push({
-                id: this.spriteManager.addSprite(-2, Utils.translationOnMap(path[i].ypos, path[i].xpos), this.textures[0], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true),
-                xpos: path[i].xpos,
-                ypos: path[i].ypos
-            });
-            global.tiledMap[path[i].xpos][path[i].ypos].active = true;
-        }
-        this.units.forEach((unit) => {
-            this.spriteManager.getSprite(unit.entity.mapId).order = unit.ypos;
-            this.spriteManager.getSprite(unit.entity.healthbarId).order = unit.ypos;
-        });
-        this.spriteManager.sortSprites();
     }
 }

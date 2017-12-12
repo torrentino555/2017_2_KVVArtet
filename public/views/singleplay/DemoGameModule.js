@@ -11,7 +11,7 @@ export default class DemoGameModule {
         this.WIDTH = 16;
         this.HEIGHT = 12;
         this.PARTYSIZE = 4;
-        this.ENEMIESSIZE = 2;
+        this.ENEMIESSIZE = 5;
         this.kek = 3;
         this.NOTWALL = 0;
         this.WALL = 1;
@@ -19,7 +19,7 @@ export default class DemoGameModule {
         this.enemies = [];
         this.initiativeLine = new InitiativeLine();
         this.activeUnit = null;
-        this.timer = 30000;
+        this.timer = 600000000;
         this.intervalId = 0;
         this.interval = 100;
     }
@@ -64,7 +64,7 @@ export default class DemoGameModule {
             if (sec < 10) {
                 sec = '0' + sec;
             }
-            document.getElementById('time').innerHTML = '00:' + sec;
+            document.getElementById('time').innerHTML = 'Skip action';
             //где-то здесь есть работа с АИ
             //отрисовка скилов для каждого персонажа, информация для dropdown и позиций
             if (global.actionDeque.length > 0) {
@@ -327,7 +327,7 @@ export default class DemoGameModule {
     }
 
     skipAction() {
-        this.timer = 30000;
+        this.timer = 60000000;
         this.beginTurn();
     }
 
@@ -339,7 +339,7 @@ export default class DemoGameModule {
             path.push(key);
         }
         path.shift();
-        this.gameManager.unitManager.showPossibleMoves(path);
+        this.gameManager.unitManager.drawActiveTiles(path);
     }
 
     beginTurn() {

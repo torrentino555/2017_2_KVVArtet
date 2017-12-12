@@ -8,15 +8,13 @@ import UnitManager from './UnitManager';
 import Animation from './Animation';
 import Action from "./Action";
 
-//import {global.tiledMap,test} from './GameModule'
-//import   './GameModule'
-
 export default class GameManager {
     constructor() {
         this.ratio = 16 / 9;
         this.engine = new GraphicEngine('canvas', true);
         this.spriteManager = new SpriteManager(this.engine);
         this.state = new State();
+        this.tiles = [];
         this.fullScreen = false;
     }
 
@@ -26,7 +24,9 @@ export default class GameManager {
             '/views/singleplay/textures/moveTile.png', '/views/singleplay/textures/activeTile.png',
             '/views/singleplay/textures/select.png', '/views/singleplay/icons/fullscreen.png',
             '/views/singleplay/textures/actionBack.png', '/views/singleplay/icons/circle.png',
-            '/views/singleplay/icons/radio2.png', '/views/singleplay/icons/radio1.png'
+            '/views/singleplay/icons/radio2.png', '/views/singleplay/icons/radio1.png',
+            '/views/singleplay/icons/dead.png',
+            '/views/singleplay/textures/greenTile.png', '/views/singleplay/textures/redTile.png'
         ], this.engine.gl);
         let loaderAnimations = new Loader([
             '/views/singleplay/animations/fireball.png', '/views/singleplay/animations/Fire 5.png', '/views/singleplay/animations/thunderbolt.png',
@@ -92,10 +92,28 @@ export default class GameManager {
             let xMax = xMin + 0.6;
             let yMin = (1 - global.mapShiftY)/2;
             let yMax = yMin + 0.8;
+            this.tiles.forEach(function(tile) {
+                this.spriteManager.deleteSprite(tile);
+            }.bind(this));
+            this.tiles = [];
             if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.AnimationOnMap) {
                 let i = Math.floor(((x - xMin) / 0.6) / (1 / 16));
                 let j = Math.floor(((y - yMin) / 0.8) / (1 / 12));
-                if (i < 16 && j < 12 && global.tiledMap[i][j].active) {
+                if (i < 16 && j < 12 && this.unitManager.massiveSkill) {
+                    let halfArea = Math.floor(this.unitManager.activeSkill.area/2) + 1;
+                    for (let ii = i - halfArea; ii <= i + halfArea; ii++) {
+                        for (let jj = j - halfArea; jj <= j + halfArea; jj++) {
+                            if (ii >= 0 && ii < 16 && jj >= 0 && jj < 12) {
+                                this.tiles.push(this.spriteManager.addSprite(-2, Utils.translationOnMap(jj, ii), this.textures[10], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true));
+                            }
+                        }
+                    }
+                    this.unitManager.units.forEach((unit) => {
+                        this.spriteManager.getSprite(unit.entity.mapId).order = unit.ypos;
+                        this.spriteManager.getSprite(unit.entity.healthbarId).order = unit.ypos;
+                    });
+                    this.spriteManager.sortSprites();
+                } else if (i < 16 && j < 12 && global.tiledMap[i][j].active) {
                     this.spriteManager.getSprite(this.activeElem).setTrans(Utils.translationOnMap(j, i));
                 } else {
                     this.spriteManager.getSprite(this.activeElem).setTrans([-2, -2]);
@@ -115,7 +133,7 @@ export default class GameManager {
                     this.fullScreen = false;
                 }
             }
-            if (x>=0.25 && x <=0.3 && y<=0.05) {
+            if (x>=0.2 && x <=0.3 && y<=0.05) {
                 let action = new Action();
                 action.sender = null;
                 action.target = null;
