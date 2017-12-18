@@ -148,9 +148,6 @@ export default class GameManager {
         this.activeElem = this.spriteManager.addSprite(-1, [
             -2, 3
         ], this.textures[2], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
-        this.spriteManager.addSprite(1, [
-            0.95, -1 + 0.05 * this.ratio
-        ], this.textures[3], Utils.madeRectangle(0, 0, 0.05, -0.05 * this.ratio), true);
         this.actionPoint = this.spriteManager.addSprite(0, Utils.transActionPoint(0), this.textures[6], Utils.madeRectangle(0, 0, 0.023, -0.050*global.ratio), true);
         document.body.style.height = '100vh';
         let skillBar = document.createElement('div');
@@ -163,5 +160,23 @@ export default class GameManager {
         skillBar.style.backgroundSize = '100% 100%';
         skillBar.style.backgroundRepeat = 'no-repeat';
         document.getElementsByClassName('container')[0].appendChild(skillBar);
+
+        let chat = document.createElement('div');
+        chat.style.position = 'absolute';
+        chat.style.color = 'white';
+        chat.style.left = '76vw';
+        chat.style.top = '18vh';
+        chat.style.overflow = 'auto';
+        chat.style.height = '80vh';
+        global.chat = chat;
+        document.body.appendChild(chat);
+    }
+    static log(text, color) {
+        if (color === undefined) {
+            chat.innerHTML += text + '<br>';
+        } else {
+            chat.innerHTML += '<span style=\'color:' + color + ';\'>' + text + '</span><br>';
+        }
+        chat.scrollTop = chat.scrollHeight;
     }
 }

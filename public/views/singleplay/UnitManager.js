@@ -116,7 +116,7 @@ export default class UnitManager {
     updateSkillbar(name, sender, target) {
     }
 
-    neighbors(sender, target) {
+    static neighbors(sender, target) {
         console.log("sender"+sender+" target"+target+" neighvoors?");
         if (target.xpos + 1 === sender.xpos && target.ypos === sender.ypos) {
             return true;
@@ -277,7 +277,6 @@ export default class UnitManager {
     drawActiveTiles(tiles) {
         this.deleteLastActiveTiles();
         tiles.forEach(function(tile) {
-            console.log(tile.unitOnTile);
             this.possibleMoves.push({
                 id: this.spriteManager.addSprite(-2, Utils.translationOnMap(tile.ypos, tile.xpos), (tile.unitOnTile && !tile.unitOnTile.isDead()) ? (tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10]) : this.textures[0], Utils.madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
                 xpos: tile.xpos,

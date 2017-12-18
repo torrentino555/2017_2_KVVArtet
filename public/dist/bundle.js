@@ -1549,16 +1549,16 @@ class DemoGameModule {
         this.initiativeLine.PushEveryone(this.players, this.enemies);
         this.setPlayersPositions(this.players);
         this.setEnemiesPositions(this.enemies);
-        console.log('Everyone on positions: ');
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('Everyone on positions: ');
         //отрисовка персонажей
 
         for (let i = 0; i < this.PARTYSIZE + this.ENEMIESSIZE; i++) {
-            console.log(this.enemies);
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(this.enemies);
             this.gameManager.unitManager.addUnit(this.initiativeLine.queue[i]);
         }
 
         this.activeUnit = this.initiativeLine.CurrentUnit();
-        console.log(this.activeUnit.name + ' - let\'s start with you!');
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(this.activeUnit.name + ' - let\'s start with you!');
         this.gameManager.unitManager.activeUnit(this.activeUnit);
         this.sendPossibleMoves();
     }
@@ -1570,11 +1570,11 @@ class DemoGameModule {
             if (sec < 10) {
                 sec = '0' + sec;
             }
-            document.getElementById('time').innerHTML = 'Skip action';
+            document.getElementById('time').innerHTML = 'Skip';
             //где-то здесь есть работа с АИ
             //отрисовка скилов для каждого персонажа, информация для dropdown и позиций
             if (global.actionDeque.length > 0) {
-                console.log('action begin');
+                __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('action begin', 'green');
                 this.activeUnit.actionPoint--;
                 let action = global.actionDeque.shift();
                 if (action.isMovement() && !action.target.isOccupied()) {
@@ -1582,7 +1582,7 @@ class DemoGameModule {
                     // } else if (action.isPrepareAbility()) {
                     //     this.makePrepareAbility(action);
                 } else if (action.isAbility()) {
-                    console.log('this is ability: ' + action.ability.name);
+                    __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('this is ability: ' + action.ability.name);
                     if (action.ability.damage[1] < 0) {
                         this.makeHill(action);
                     } else if (action.ability.damage[1] > 0) {
@@ -1596,7 +1596,6 @@ class DemoGameModule {
                     this.sendPossibleMoves();
                 }
             }
-            console.log('action point: ' + this.activeUnit.actionPoint);
 
             if (this.activeUnit.actionPoint === 0 || Math.ceil(this.timer / 1000) === 0 || this.activeUnit.isDead()) {
                 this.skipAction();
@@ -1618,7 +1617,7 @@ class DemoGameModule {
     // }
 
     makeMove(action) {
-        console.log(action.sender.getInhabitant().name + ' make move from [' + action.sender.xpos + ',' + action.sender.ypos + ']' + ' to [' + action.target.xpos + ',' + action.target.ypos + ']');
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(action.sender.getInhabitant().name + ' make move from [' + action.sender.xpos + ',' + action.sender.ypos + ']' + ' to [' + action.target.xpos + ',' + action.target.ypos + ']');
         let toMove = action.sender.getInhabitant();
         let pathfinding = new __WEBPACK_IMPORTED_MODULE_2__Pathfinding__["a" /* default */](action.sender, global.tiledMap);
         let allMoves = pathfinding.possibleMoves();
@@ -1626,33 +1625,33 @@ class DemoGameModule {
         let currentTile = action.target;
         while (allMoves.get(currentTile) !== null) {
             path.push(currentTile);
-            console.log('current tile - [' + currentTile.xpos + ']' + '[' + currentTile.ypos + ']');
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('current tile - [' + currentTile.xpos + ']' + '[' + currentTile.ypos + ']');
             currentTile = allMoves.get(currentTile);
         }
-        console.log(path);
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(path);
         this.gameManager.animtaionManager.movingTo(action.sender, path);
         action.sender.unoccupy();
         action.target.occupy(toMove);
         this.activeUnit.xpos = action.target.xpos;
         this.activeUnit.ypos = action.target.ypos;
-        console.log('check on unoccupy: ' + action.sender.isOccupied());
-        console.log('check on occupy: ' + action.target.isOccupied());
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('check on unoccupy: ' + action.sender.isOccupied());
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('check on occupy: ' + action.target.isOccupied());
     }
 
     makeHill(action) {
         let healedAllies = [];
         //AOE HILL
         if (action.ability.typeOfArea === 'circle') {
-            console.log('THIS IS AOE HILL');
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('THIS IS AOE HILL');
             for (let i = action.target.xpos - action.ability.area; i <= action.target.xpos + action.ability.area; i++) {
                 for (let j = action.target.ypos - action.ability.area; j <= action.target.ypos + action.ability.area; j++) {
                     if (i >= 0 && j >= 0 && i < this.WIDTH && j < this.HEIGHT) {
-                        console.log('WTF is ' + i + ' ' + j);
+                        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('WTF is ' + i + ' ' + j);
                         if (global.tiledMap[i][j].isOccupied() && global.tiledMap[i][j].getInhabitant().type === action.sender.getInhabitant().type) {
-                            console.log('this is AOE hill on someone: ' + i + ' ' + j);
+                            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('this is AOE hill on someone: ' + i + ' ' + j);
                             healedAllies.push(global.tiledMap[i][j].getInhabitant());
                             action.sender.getInhabitant().useHealSkill(global.tiledMap[i][j].getInhabitant(), action.ability);
-                            console.log('health end: ' + global.tiledMap[i][j].getInhabitant().healthpoint);
+                            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('health end: ' + global.tiledMap[i][j].getInhabitant().healthpoint);
                         }
                     }
                 }
@@ -1660,7 +1659,7 @@ class DemoGameModule {
         } else {
             action.sender.getInhabitant().useHealSkill(action.target.getInhabitant(), action.ability);
             healedAllies.push(action.target.getInhabitant());
-            console.log('health end: ' + action.target.getInhabitant().healthpoint);
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('health end: ' + action.target.getInhabitant().healthpoint);
         }
         this.gameManager.unitManager.unitAttack(action.ability.name, action.sender, action.target, healedAllies);
     }
@@ -1668,20 +1667,20 @@ class DemoGameModule {
     makeDamage(action) {
         let woundedEnemies = [];
         let deadEnemies = [];
-        console.log(action.sender.getInhabitant().name + ' make damage');
-        console.log('this is damage: ' + action.ability.name);
-        // console.log("health begin: " + action.target.getInhabitant().healthpoint);
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(action.sender.getInhabitant().name + ' make damage');
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('this is damage: ' + action.ability.name);
+        // GameManager.log("health begin: " + action.target.getInhabitant().healthpoint);
 
         //AOE DAMAGE
         if (action.ability.typeOfArea === 'circle') {
-            console.log('THIS IS AOE DAMAGE');
-            console.log('target on ' + action.target.xpos + ' ' + action.target.ypos);
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('THIS IS AOE DAMAGE');
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('target on ' + action.target.xpos + ' ' + action.target.ypos);
             for (let i = action.target.xpos - action.ability.area; i <= action.target.xpos + action.ability.area; i++) {
                 for (let j = action.target.ypos - action.ability.area; j <= action.target.ypos + action.ability.area; j++) {
-                    console.log("i: " + i + " j: " + j);
+                    __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log("i: " + i + " j: " + j);
                     if (i >= 0 && j >= 0 && i < this.WIDTH && j < this.HEIGHT) {
                         if (global.tiledMap[i][j].isOccupied() && global.tiledMap[i][j].getInhabitant().deadMark === false) {
-                            console.log(global.tiledMap[i][j].getInhabitant().name + " IS WOUNDED");
+                            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(global.tiledMap[i][j].getInhabitant().name + " IS WOUNDED");
                             action.sender.getInhabitant().useDamageSkill(global.tiledMap[i][j].getInhabitant(), action.ability);
                             if (global.tiledMap[i][j].getInhabitant().isDead()) {
                                 deadEnemies.push(global.tiledMap[i][j].getInhabitant());
@@ -1689,7 +1688,7 @@ class DemoGameModule {
                             } else {
                                 woundedEnemies.push(global.tiledMap[i][j].getInhabitant());
                             }
-                            //console.log("health end: " + action.target.getInhabitant().healthpoint);
+                            //GameManager.log("health end: " + action.target.getInhabitant().healthpoint);
                         }
                     }
                 }
@@ -1701,18 +1700,18 @@ class DemoGameModule {
             } else {
                 woundedEnemies.push(action.target.getInhabitant());
             }
-            console.log('health end: ' + action.target.getInhabitant().healthpoint);
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('health end: ' + action.target.getInhabitant().healthpoint);
         }
 
         if (deadEnemies.length > 0) {
-            // console.log(action.target.getInhabitant().name + " IS DEAD");
+            // GameManager.log(action.target.getInhabitant().name + " IS DEAD");
 
             this.gameManager.unitManager.unitAttackAndKill(action.ability.name, action.sender, action.target, deadEnemies, woundedEnemies);
             for (let i = 0; i < deadEnemies.length; i++) {
                 this.initiativeLine.RemoveUnit(deadEnemies[i]);
             } //graph.deleteFromLowBar(action.target.getInhabitant().barIndex);
         } else {
-            console.log('SOMEONE GET WOUNDED: ', woundedEnemies);
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('SOMEONE GET WOUNDED: ', woundedEnemies);
             this.gameManager.unitManager.unitAttack(action.ability.name, action.sender, action.target, woundedEnemies);
         }
     }
@@ -1757,7 +1756,7 @@ class DemoGameModule {
     generateEnemies() {
         let newEnemies = [];
         for (let i = 0; i < this.ENEMIESSIZE; i++) {
-            console.log(i);
+            __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(i);
             let Skeleton = new __WEBPACK_IMPORTED_MODULE_1__Unit__["a" /* default */]();
             let texture;
             if (i % 2 === 0) {
@@ -1851,9 +1850,9 @@ class DemoGameModule {
 
     beginTurn() {
         this.activeUnit = this.initiativeLine.NextUnit();
-        console.log('This turn: ');
-        console.log(this.initiativeLine.ShowEveryoneInLine());
-        console.log(this.activeUnit.name + ' = now your move! Cause initiative:' + this.activeUnit.initiative);
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log('This turn: ');
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(this.initiativeLine.ShowEveryoneInLine());
+        __WEBPACK_IMPORTED_MODULE_4__GameManager__["a" /* default */].log(this.activeUnit.name + ' = now your move! Cause initiative:' + this.activeUnit.initiative);
         this.activeUnit.actionPoint = 2;
         this.gameManager.unitManager.activeUnit(this.activeUnit);
         this.sendPossibleMoves();
@@ -2188,11 +2187,11 @@ class Background {
                 }
             }.bind(this));
         }.bind(this));
-        for (let i = -0.6; i <= 0.6; i += 1.2 / 16) {
+        for (let i = global.mapShiftX; i <= 1.2 + global.mapShiftX; i += 1.2 / 16) {
             this.engine.addColorSprite([i, 0.65], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 0.001, -1.6), [1, 1, 1, 1]);
         }
         for (let i = -0.95; i <= 0.65; i += 1.2 / 16 * global.ratio) {
-            this.engine.addColorSprite([-0.6, i], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 1.2, -0.0018), [1, 1, 1, 1]);
+            this.engine.addColorSprite([global.mapShiftX, i], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 1.2, -0.0018), [1, 1, 1, 1]);
         }
         this.engine.addSprite([-0.6, 0.995], this.textures[5], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 0.1875, -0.13), true);
         this.engine.addSprite([0.68, 0.97], this.textures[6], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 0.07, -0.07 * global.ratio));
@@ -2431,9 +2430,10 @@ class Uniform {
 
 global.actionDeque = [];
 global.tiledMap = new __WEBPACK_IMPORTED_MODULE_0__DungeonMapMaker__["a" /* default */]().dungeonMapMaker(Math.random() * 10 + 25);
-global.mapShiftX = -0.6;
+global.mapShiftX = -0.7;
 global.mapShiftY = 0.65;
 global.ratio = 16 / 9;
+global.countLines = 0;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
 
 /***/ }),
@@ -2645,7 +2645,6 @@ class GameManager {
     initGui() {
         this.activeTile = this.spriteManager.addSprite(-0.9, [-2, 3], this.textures[1], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
         this.activeElem = this.spriteManager.addSprite(-1, [-2, 3], this.textures[2], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * this.ratio), true);
-        this.spriteManager.addSprite(1, [0.95, -1 + 0.05 * this.ratio], this.textures[3], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 0.05, -0.05 * this.ratio), true);
         this.actionPoint = this.spriteManager.addSprite(0, __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].transActionPoint(0), this.textures[6], __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].madeRectangle(0, 0, 0.023, -0.050 * global.ratio), true);
         document.body.style.height = '100vh';
         let skillBar = document.createElement('div');
@@ -2658,6 +2657,24 @@ class GameManager {
         skillBar.style.backgroundSize = '100% 100%';
         skillBar.style.backgroundRepeat = 'no-repeat';
         document.getElementsByClassName('container')[0].appendChild(skillBar);
+
+        let chat = document.createElement('div');
+        chat.style.position = 'absolute';
+        chat.style.color = 'white';
+        chat.style.left = '76vw';
+        chat.style.top = '18vh';
+        chat.style.overflow = 'auto';
+        chat.style.height = '80vh';
+        global.chat = chat;
+        document.body.appendChild(chat);
+    }
+    static log(text, color) {
+        if (color === undefined) {
+            chat.innerHTML += text + '<br>';
+        } else {
+            chat.innerHTML += '<span style=\'color:' + color + ';\'>' + text + '</span><br>';
+        }
+        chat.scrollTop = chat.scrollHeight;
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = GameManager;
@@ -2951,7 +2968,7 @@ class UnitManager {
 
     updateSkillbar(name, sender, target) {}
 
-    neighbors(sender, target) {
+    static neighbors(sender, target) {
         console.log("sender" + sender + " target" + target + " neighvoors?");
         if (target.xpos + 1 === sender.xpos && target.ypos === sender.ypos) {
             return true;
@@ -3111,7 +3128,6 @@ class UnitManager {
     drawActiveTiles(tiles) {
         this.deleteLastActiveTiles();
         tiles.forEach(function (tile) {
-            console.log(tile.unitOnTile);
             this.possibleMoves.push({
                 id: this.spriteManager.addSprite(-2, __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].translationOnMap(tile.ypos, tile.xpos), tile.unitOnTile && !tile.unitOnTile.isDead() ? tile.unitOnTile.type === this.currentUnit.type ? this.textures[9] : this.textures[10] : this.textures[0], __WEBPACK_IMPORTED_MODULE_1__Utils__["a" /* default */].madeRectangle(0, 0, 1.2 / 16, -(1.2 / 16) * global.ratio), true),
                 xpos: tile.xpos,
