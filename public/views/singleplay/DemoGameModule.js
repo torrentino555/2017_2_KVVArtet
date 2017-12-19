@@ -217,6 +217,7 @@ export default class DemoGameModule {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
             document.getElementById('lose').removeAttribute('style');
+            this.gameManager.stop();
         }.bind(this), 1500);
         //createoverlaylose
     }
@@ -226,6 +227,7 @@ export default class DemoGameModule {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
             document.getElementById('win').removeAttribute('style');
+            this.gameManager.stop();
         }.bind(this), 1500);
         //createoverlaywin
     }

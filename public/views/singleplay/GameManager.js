@@ -86,7 +86,7 @@ export default class GameManager {
     }
 
     initEvents() {
-        let mouseMoveListener = document.addEventListener('mousemove', function(event) {
+        this.mouseMoveListener = document.addEventListener('mousemove', function(event) {
             let x = event.clientX / window.innerWidth;
             let y = event.clientY /window.innerHeight;
             let xMin = (1 + global.mapShiftX)/2;
@@ -118,7 +118,7 @@ export default class GameManager {
                 }
             }
         }.bind(this));
-        let clickListener = document.addEventListener('click', (event) => {
+        this.clickListener = document.addEventListener('click', (event) => {
             let x = event.clientX / this.engine.gl.canvas.clientWidth;
             let y = event.clientY / this.engine.gl.canvas.clientHeight;
             if (x >= 0.95 && y >= 0.95) {
@@ -139,18 +139,17 @@ export default class GameManager {
                 global.actionDeque.push(action);
             }
         });
-        document.addEventListener('keypress', function(event) {
-            if (event.keyCode === 27) {
-                this.engine.loop = false;
-                document.removeEventListener('mousemove', mouseMoveListener);
-                document.removeEventListener('click', clickListener);
-                document.onresize = () => {};
-                document.onmousedown = () => {};
-                if (intervalId) {
-                    clearInterval(intervalId);
-                }
-            }
-        }.bind(this))
+    }
+
+    stop() {
+        this.engine.loop = false;
+        document.removeEventListener('mousemove', this.mouseMoveListener);
+        document.removeEventListener('click', this.clickListener);
+        document.onresize = () => {};
+        document.onmousedown = () => {};
+        if (intervalId) {
+            clearInterval(intervalId);
+        }
     }
 
     initGui() {

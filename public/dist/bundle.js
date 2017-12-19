@@ -1721,6 +1721,7 @@ class DemoGameModule {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
             document.getElementById('lose').removeAttribute('style');
+            this.gameManager.stop();
         }.bind(this), 1500);
         //createoverlaylose
     }
@@ -1730,6 +1731,7 @@ class DemoGameModule {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
             document.getElementById('win').removeAttribute('style');
+            this.gameManager.stop();
         }.bind(this), 1500);
         //createoverlaywin
     }
@@ -2587,7 +2589,7 @@ class GameManager {
     }
 
     initEvents() {
-        let mouseMoveListener = document.addEventListener('mousemove', function (event) {
+        this.mouseMoveListener = document.addEventListener('mousemove', function (event) {
             let x = event.clientX / window.innerWidth;
             let y = event.clientY / window.innerHeight;
             let xMin = (1 + global.mapShiftX) / 2;
@@ -2619,7 +2621,7 @@ class GameManager {
                 }
             }
         }.bind(this));
-        let clickListener = document.addEventListener('click', event => {
+        this.clickListener = document.addEventListener('click', event => {
             let x = event.clientX / this.engine.gl.canvas.clientWidth;
             let y = event.clientY / this.engine.gl.canvas.clientHeight;
             if (x >= 0.95 && y >= 0.95) {
@@ -2640,18 +2642,17 @@ class GameManager {
                 global.actionDeque.push(action);
             }
         });
-        document.addEventListener('keypress', function (event) {
-            if (event.keyCode === 27) {
-                this.engine.loop = false;
-                document.removeEventListener('mousemove', mouseMoveListener);
-                document.removeEventListener('click', clickListener);
-                document.onresize = () => {};
-                document.onmousedown = () => {};
-                if (intervalId) {
-                    clearInterval(intervalId);
-                }
-            }
-        }.bind(this));
+    }
+
+    stop() {
+        this.engine.loop = false;
+        document.removeEventListener('mousemove', this.mouseMoveListener);
+        document.removeEventListener('click', this.clickListener);
+        document.onresize = () => {};
+        document.onmousedown = () => {};
+        if (intervalId) {
+            clearInterval(intervalId);
+        }
     }
 
     initGui() {
@@ -3292,7 +3293,7 @@ class Animation {
 /* 44 */
 /***/ (function(module, exports) {
 
-module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <div id=\"win\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n  <div id=\"lose\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n</body>\n\n</html>\n";
+module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <div id=\"win\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n  <div id=\"lose\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/lose.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n</body>\n\n</html>\n";
 
 /***/ }),
 /* 45 */
