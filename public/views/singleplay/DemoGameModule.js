@@ -31,8 +31,8 @@ export default class DemoGameModule {
 
     gamePreRender() {
         let numberSchene = 0;
-        let back = new Background(numberSchene);
-        back.render();
+        this.back = new Background(numberSchene);
+        this.back.render();
         this.gameManager.startGameRendering(this.gameStart.bind(this));
     }
 
@@ -216,7 +216,7 @@ export default class DemoGameModule {
         setTimeout(function() {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-            document.getElementById('lose').removeAttribute('hidden');
+            document.getElementById('lose').removeAttribute('style');
         }.bind(this), 1500);
         //createoverlaylose
     }
@@ -225,7 +225,7 @@ export default class DemoGameModule {
         setTimeout(function() {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-            document.getElementById('win').removeAttribute('hidden');
+            document.getElementById('win').removeAttribute('style');
         }.bind(this), 1500);
         //createoverlaywin
     }
@@ -320,7 +320,7 @@ export default class DemoGameModule {
     }
 
     startGameLoop() {
-        this.intervalId = setInterval(() => this.gameLoop(), this.interval);
+        global.intervalId = this.intervalId = setInterval(() => this.gameLoop(), this.interval);
     }
 
     stopGameLoop() {

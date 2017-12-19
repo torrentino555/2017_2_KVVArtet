@@ -86,7 +86,7 @@ export default class GameManager {
     }
 
     initEvents() {
-        document.addEventListener('mousemove', function(event) {
+        let mouseMoveListener = document.addEventListener('mousemove', function(event) {
             let x = event.clientX / window.innerWidth;
             let y = event.clientY /window.innerHeight;
             let xMin = (1 + global.mapShiftX)/2;
@@ -97,7 +97,7 @@ export default class GameManager {
                 this.spriteManager.deleteSprite(tile);
             }.bind(this));
             this.tiles = [];
-            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
+            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && !this.state.state) {
                 let i = Math.floor(((x - xMin) / 0.6) / (1 / 16));
                 let j = Math.floor(((y - yMin) / 0.8) / (1 / 12));
                 if (i !== this.lastI && j !== this.lastJ && i < 16 && j < 12 && this.unitManager.massiveSkill) {
@@ -118,7 +118,7 @@ export default class GameManager {
                 }
             }
         }.bind(this));
-        document.addEventListener('click', (event) => {
+        let clickListener = document.addEventListener('click', (event) => {
             let x = event.clientX / this.engine.gl.canvas.clientWidth;
             let y = event.clientY / this.engine.gl.canvas.clientHeight;
             if (x >= 0.95 && y >= 0.95) {
@@ -139,6 +139,18 @@ export default class GameManager {
                 global.actionDeque.push(action);
             }
         });
+        document.addEventListener('keypress', function(event) {
+            if (event.keyCode === 27) {
+                this.engine.loop = false;
+                document.removeEventListener('mousemove', mouseMoveListener);
+                document.removeEventListener('click', clickListener);
+                document.onresize = () => {};
+                document.onmousedown = () => {};
+                if (intervalId) {
+                    clearInterval(intervalId);
+                }
+            }
+        }.bind(this))
     }
 
     initGui() {
@@ -168,8 +180,9 @@ export default class GameManager {
         chat.style.top = '18vh';
         chat.style.overflow = 'auto';
         chat.style.height = '80vh';
+        chat.style.width = '23vw';
         global.chat = chat;
-        document.body.appendChild(chat);
+        document.getElementsByClassName('container')[0].appendChild(chat);
     }
     static log(text, color) {
         if (color === undefined) {

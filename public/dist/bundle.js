@@ -1538,8 +1538,8 @@ class DemoGameModule {
 
     gamePreRender() {
         let numberSchene = 0;
-        let back = new __WEBPACK_IMPORTED_MODULE_3__Background__["a" /* default */](numberSchene);
-        back.render();
+        this.back = new __WEBPACK_IMPORTED_MODULE_3__Background__["a" /* default */](numberSchene);
+        this.back.render();
         this.gameManager.startGameRendering(this.gameStart.bind(this));
     }
 
@@ -1720,7 +1720,7 @@ class DemoGameModule {
         setTimeout(function () {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-            document.getElementById('lose').removeAttribute('hidden');
+            document.getElementById('lose').removeAttribute('style');
         }.bind(this), 1500);
         //createoverlaylose
     }
@@ -1729,7 +1729,7 @@ class DemoGameModule {
         setTimeout(function () {
             this.stopGameLoop();
             document.getElementsByClassName('container')[0].setAttribute('class', 'blur container');
-            document.getElementById('win').removeAttribute('hidden');
+            document.getElementById('win').removeAttribute('style');
         }.bind(this), 1500);
         //createoverlaywin
     }
@@ -1823,7 +1823,7 @@ class DemoGameModule {
     }
 
     startGameLoop() {
-        this.intervalId = setInterval(() => this.gameLoop(), this.interval);
+        global.intervalId = this.intervalId = setInterval(() => this.gameLoop(), this.interval);
     }
 
     stopGameLoop() {
@@ -2587,7 +2587,7 @@ class GameManager {
     }
 
     initEvents() {
-        document.addEventListener('mousemove', function (event) {
+        let mouseMoveListener = document.addEventListener('mousemove', function (event) {
             let x = event.clientX / window.innerWidth;
             let y = event.clientY / window.innerHeight;
             let xMin = (1 + global.mapShiftX) / 2;
@@ -2598,7 +2598,7 @@ class GameManager {
                 this.spriteManager.deleteSprite(tile);
             }.bind(this));
             this.tiles = [];
-            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
+            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && !this.state.state) {
                 let i = Math.floor((x - xMin) / 0.6 / (1 / 16));
                 let j = Math.floor((y - yMin) / 0.8 / (1 / 12));
                 if (i !== this.lastI && j !== this.lastJ && i < 16 && j < 12 && this.unitManager.massiveSkill) {
@@ -2619,7 +2619,7 @@ class GameManager {
                 }
             }
         }.bind(this));
-        document.addEventListener('click', event => {
+        let clickListener = document.addEventListener('click', event => {
             let x = event.clientX / this.engine.gl.canvas.clientWidth;
             let y = event.clientY / this.engine.gl.canvas.clientHeight;
             if (x >= 0.95 && y >= 0.95) {
@@ -2640,6 +2640,18 @@ class GameManager {
                 global.actionDeque.push(action);
             }
         });
+        document.addEventListener('keypress', function (event) {
+            if (event.keyCode === 27) {
+                this.engine.loop = false;
+                document.removeEventListener('mousemove', mouseMoveListener);
+                document.removeEventListener('click', clickListener);
+                document.onresize = () => {};
+                document.onmousedown = () => {};
+                if (intervalId) {
+                    clearInterval(intervalId);
+                }
+            }
+        }.bind(this));
     }
 
     initGui() {
@@ -2665,8 +2677,9 @@ class GameManager {
         chat.style.top = '18vh';
         chat.style.overflow = 'auto';
         chat.style.height = '80vh';
+        chat.style.width = '23vw';
         global.chat = chat;
-        document.body.appendChild(chat);
+        document.getElementsByClassName('container')[0].appendChild(chat);
     }
     static log(text, color) {
         if (color === undefined) {
@@ -3045,8 +3058,8 @@ class UnitManager {
             let xMax = xMin + 0.6;
             let yMin = (1 - global.mapShiftY) / 2;
             let yMax = yMin + 0.8;
-            console.log('STATE: ' + this.state.state);
-            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').hidden && document.getElementById('lose').hidden && !this.state.state) {
+            console.log('onmousedown STATE: ' + this.state.state);
+            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && !this.state.state) {
                 let i = Math.floor((x - xMin) / 0.6 / (1 / 16));
                 let j = Math.floor((y - yMin) / 0.8 / (1 / 12));
                 if (global.tiledMap[i][j].active || this.massiveSkill) {
@@ -3279,7 +3292,7 @@ class Animation {
 /* 44 */
 /***/ (function(module, exports) {
 
-module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <img hidden id=\"win\" style=\"position:absolute;width: 100vw; height: 100vh;\" src=\"/views/singleplay/textures/win.png\">\n  <img hidden id=\"lose\" style=\"position:absolute;width: 100vw; height: 100vh;\" src=\"/views/singleplay/textures/lose.png\">\n  </img>\n</body>\n\n</html>\n";
+module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <div id=\"win\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n  <div id=\"lose\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n</body>\n\n</html>\n";
 
 /***/ }),
 /* 45 */

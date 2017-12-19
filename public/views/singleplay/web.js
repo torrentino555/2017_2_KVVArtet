@@ -13,7 +13,6 @@ export default class SinglePlay extends Block {
 
         let game = new DemoGameModule();
         game.gamePreRender();
-
     }
 
 }
