@@ -87,3 +87,39 @@ body {
     margin-left: auto;
     width: 10vw;
 }
+
+.settings {
+    position: absolute;
+    background-color: #731509;
+    border: 3px solid white;
+}
+.settings ul {
+    list-style-type: none;
+    padding: 5px;
+}
+
+.settings li {
+    color: #FFD700;
+    width: 250px;
+    padding: 15px;
+    border: 2px solid #c58818;
+    border-radius: 3px;
+    background: #740c16 radial-gradient(150% 100% at 50% 5px, rgba(255, 255, 255, 0.2), transparent);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.settings li:hover {
+    color: white;
+    border-color: white;
+}
+
+.settings h1 {
+    text-align: center;
+    color: white;
+}
+
+.overlay {
+    background-color: #000;
+    opacity: 0.5;
+}

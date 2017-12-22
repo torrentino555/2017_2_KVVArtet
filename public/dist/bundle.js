@@ -265,6 +265,10 @@ module.exports = g;
       gl.canvas.height = displayHeight;
     }
     gl.viewport(0, 0, window.screen.availWidth, window.screen.availHeight);
+
+    let settings = document.getElementsByClassName('settings')[0];
+    settings.style.top = Math.floor((window.innerHeight - settings.offsetHeight) / 2) + 'px';
+    settings.style.left = Math.floor((window.innerWidth - settings.offsetWidth) / 2) + 'px';
   }
 
   static madeRectangle(x0, y0, width, height) {
@@ -2599,7 +2603,7 @@ class GameManager {
                 this.spriteManager.deleteSprite(tile);
             }.bind(this));
             this.tiles = [];
-            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && !this.state.state) {
+            if (x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && document.getElementsByClassName('settings')[0].style.display === 'none' && !this.state.state) {
                 let i = Math.floor((x - xMin) / 0.6 / (1 / 16));
                 let j = Math.floor((y - yMin) / 0.8 / (1 / 12));
                 if (i !== this.lastI && j !== this.lastJ && i < 16 && j < 12 && this.unitManager.massiveSkill) {
@@ -2623,23 +2627,22 @@ class GameManager {
         this.clickListener = document.addEventListener('click', event => {
             let x = event.clientX / this.engine.gl.canvas.clientWidth;
             let y = event.clientY / this.engine.gl.canvas.clientHeight;
-            if (x >= 0.95 && y >= 0.95) {
-                console.log(event.clientX + ' ' + event.clientY);
-                if (!this.fullScreen) {
-                    document.documentElement.mozRequestFullScreen();
-                    this.fullScreen = true;
-                } else {
-                    document.mozCancelFullScreen();
-                    this.fullScreen = false;
-                }
-            }
-            if (x >= 0.2 && x <= 0.3 && y <= 0.05) {
+            if (x >= 0.2 && x <= 0.3 && y <= 0.05 && document.getElementById('win').style.display === 'none' && document.getElementsByClassName('settings')[0].style.display === 'none') {
                 let action = new __WEBPACK_IMPORTED_MODULE_7__Action__["a" /* default */]();
                 action.sender = null;
                 action.target = null;
                 action.ability = null;
                 global.actionDeque.push(action);
+            } else if (x >= 0.94 && x <= 0.975 && y >= 0.015 && y <= 0.077222 && document.getElementById('win').style.display === 'none' && document.getElementsByClassName('settings')[0].style.display === 'none') {
+                document.getElementsByClassName('settings')[0].style.display = 'block';
+                let container = document.getElementsByClassName('container')[0];
+                container.className += ' overlay';
             }
+        });
+        document.getElementsByClassName('settings')[0].lastElementChild.firstElementChild.addEventListener('click', function () {
+            document.getElementsByClassName('settings')[0].style.display = 'none';
+            let container = document.getElementsByClassName('container')[0];
+            container.className = 'container';
         });
     }
 
@@ -2680,6 +2683,12 @@ class GameManager {
         chat.style.width = '23vw';
         global.chat = chat;
         document.getElementsByClassName('container')[0].appendChild(chat);
+
+        let settings = document.getElementsByClassName('settings')[0];
+        settings.style.top = Math.floor((window.innerHeight - settings.offsetHeight) / 2) + 'px';
+        settings.style.left = Math.floor((window.innerWidth - settings.offsetWidth) / 2) + 'px';
+
+        document.body.style.background = '#000';
     }
     static log(text, color) {
         if (color === undefined) {
@@ -3059,7 +3068,7 @@ class UnitManager {
             let yMin = (1 - global.mapShiftY) / 2;
             let yMax = yMin + 0.8;
             console.log('onmousedown STATE: ' + this.state.state);
-            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && !this.state.state) {
+            if (event.which === 1 && x >= xMin && x < xMax && y >= yMin && y < yMax && document.getElementById('win').style.display === 'none' && document.getElementsByClassName('settings')[0].style.display === 'none' && !this.state.state) {
                 let i = Math.floor((x - xMin) / 0.6 / (1 / 16));
                 let j = Math.floor((y - yMin) / 0.8 / (1 / 12));
                 if (global.tiledMap[i][j].active || this.massiveSkill) {
@@ -3072,7 +3081,7 @@ class UnitManager {
                         this.deleteLastActiveTiles();
                     }
                 }
-            } else if (event.which === 1 && x >= 0.33 && x <= 0.675 && y >= 0 && y <= 0.07) {
+            } else if (event.which === 1 && x >= 0.33 && x <= 0.675 && y >= 0 && y <= 0.07 && document.getElementById('win').style.display === 'none' && document.getElementsByClassName('settings')[0].style.display === 'none') {
                 let i = Math.floor((x - 0.33) / (0.35 / 10));
                 this.setCurrentSkill(i);
             }
@@ -3292,7 +3301,7 @@ class Animation {
 /* 44 */
 /***/ (function(module, exports) {
 
-module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <div id=\"win\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n  <div id=\"lose\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/lose.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n</body>\n\n</html>\n";
+module.exports = "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Document</title>\n  <link rel=\"stylesheet\" href=\"/views/singleplay/style.css\">\n</head>\n\n<body>\n  <div class=\"container\">\n    <canvas id=\"background\"></canvas>\n    <canvas id=\"canvas\"></canvas>\n    <div style=\"position: relative;\">\n      <span style=\"position:absolute; left:20.8vw; top:2vh;font-size:1.5vw;color: white\" id=\"time\"></span>\n    </div>\n  </div>\n  <div id=\"win\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/win.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n  <div id=\"lose\" class=\"game-menu\" style=\"display: none\">\n    <img style=\"width: 100%; height: auto\" src=\"/views/singleplay/textures/lose.png\" alt=\"win\">\n    <div class=\"menu-icons\">\n      <img style=\"width: 4vw;\" src=\"/views/singleplay/icons/menu.png\" alt=\"\">\n      <img style=\"width: 4vw; float: right;\" src=\"/views/singleplay/icons/next_level.png\" alt=\"\">\n    </div>\n  </div>\n  <div class=\"settings\" style=\"display: none\">\n    <h1>Меню</h1>\n    <ul>\n      <li>Венуться к игре</li>\n      <li>Начать заново</li>\n      <li>Выйти</li>\n    </ul>\n  </div>\n</body>\n\n</html>\n";
 
 /***/ }),
 /* 45 */
