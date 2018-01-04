@@ -1,6 +1,7 @@
 import Block from '../../blocks/block/block';
 import Input from '../../blocks/forms/input';
-import '../../blocks/forms/forms.css';
+import '../../blocks/forms/forms.scss';
+import Router from '../../modules/router';
 
 const fieldPrototypes = [
     {
@@ -21,26 +22,37 @@ const fieldPrototypes = [
         type: 'submit',
         attributes: {
             value: 'COMPLEATE',
-            //formmethod:'post'
         }
     }
 ];
 
 class Login extends Block {
     constructor() {
-        super('form', ['login-form']);
+        super('form', ['login']);
         fieldPrototypes.forEach((fieldPrototype) => {
             this.appendChildBlock(fieldPrototype.attributes.name,
                 new Input(fieldPrototype.type, ['field'], fieldPrototype.attributes));
         });
-        const buttonBack = "buttonBack";
-        this.appendChildBlock("buttonBack",
-            new Block('a', [buttonBack]));
     }
 
+    creation() {
+
+        if (document.getElementById('user-menu')) {
+            new Router().go('/game');
+            return;
+        }
+
+        const wrappe = document.querySelector('div.menu');
+        if (wrappe.childNodes[0] !== undefined) {
+            wrappe.removeChild(wrappe.childNodes[0])
+        }
+        wrappe.appendChild(this._element);
+    }
 
     onSubmit(callback) {
+
         this.on('submit', (event) => {
+
             event.preventDefault();
             const formdata = {};
             const elements = this._element.elements;
@@ -52,5 +64,18 @@ class Login extends Block {
         });
     }
 }
+
+function setter(input) {
+    console.log(input);
+    return String(input);
+}
+
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
 
 export default Login;

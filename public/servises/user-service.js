@@ -10,7 +10,7 @@ class UserService {
         /**
          * Закомментить для обращения к серверу node.js
          */
-        Http.BaseUrl = 'https://kvvartet2017.herokuapp.com';
+        Http.BaseUrl = 'https://landsanddungeons.ru.com/restapi';
     }
 
     /**
@@ -46,21 +46,21 @@ class UserService {
      * Выход пользователя
      * @return {Promise}
      */
-    logout() {
-        return Http.Post('/signout', {});
+    logout(username,password) {
+        console.log('logout work')
+        return Http.Delete('/signout', {});
     }
 
 
     /**
-     * Загружает данные о текущем пользователе
+     * Загружает scoreboard
      * @return {Promise}
      */
-    /*getData() {
-        return Http.Post('/session')
-            .then(userdata => {
-                return userdata;
-            });
-    }*/
+
+
+    scores() {
+        return Http.Get('/scoreboard');
+    }
 
 }
 

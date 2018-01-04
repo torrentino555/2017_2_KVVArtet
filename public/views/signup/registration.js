@@ -1,6 +1,7 @@
 import Block from '../baseview';
 import Input from '../../blocks/forms/input';
-import '../../blocks/forms/forms.css';
+import '../../blocks/forms/forms.scss';
+import Router from '../../modules/router';
 
 const fieldPrototypes = [
     {
@@ -41,20 +42,25 @@ const fieldPrototypes = [
     }
 ];
 
-
 class Registration extends Block {
     constructor() {
-        super('form', ['registration-form']);
+        super('form', ['registration']);
 
         fieldPrototypes.forEach((fieldPrototype) => {
             this.appendChildBlock(fieldPrototype.attributes.name,
                 new Input(fieldPrototype.type, ['field'], fieldPrototype.attributes));
         });
-        const buttonBack = "buttonBack";
-        this.appendChildBlock("buttonBack",
-            new Block('a', [buttonBack]));
     }
 
+    creation() {
+
+        const wrappe = document.querySelector('div.menu');
+        if (wrappe.childNodes[0] !== undefined) {
+            wrappe.removeChild(wrappe.childNodes[0])
+        }
+        wrappe.appendChild(this._element);
+
+    }
 
     onSubmit(callback) {
         this.on('submit', (event) => {

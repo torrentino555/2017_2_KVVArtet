@@ -1,7 +1,4 @@
-import Validate from '../blocks/forms/validation';
-
 const baseUrl = `${window.location.protocol}//${window.location.host}`;
-
 /**
  * Класс, предоставляющий методы для выполнения HTTP-запросов
  * @class Http
@@ -17,9 +14,18 @@ class Http {
         if (typeof window.fetch !== 'undefined') {
             return this._FetchGet(url);
         }
-        return this._GetXMLHttpRequest(url);
+     //   return this._GetXMLHttpRequest(url);
     }
 
+    static Delete(address,body) {
+        const url = (Http.BaseUrl || baseUrl) + address;
+
+        if (typeof window.fetch !== 'undefined') {
+            console.log("function DELETE work");
+            return this._FetchDelete(body, url);
+        }
+        return false;
+    }
     /**
      * Выполняет POST-запрос с использованием fetch (по возможности) или XMLHttpRequest
      * @param {string} address - "ручка"
@@ -30,11 +36,11 @@ class Http {
         const url = (Http.BaseUrl || baseUrl) + address;
         if (typeof window.fetch !== 'undefined') {
             console.log("function post work");
+          //  console.log(this._FetchPost(body, url))
             return this._FetchPost(body, url);
         }
         return false;
     }
-
 
     /**
      * Выполняет GET-запрос по указанному адресу с использованием XMLHttpRequest
@@ -50,7 +56,7 @@ class Http {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState !== 4) return;
                 if (+xhr.status >= 400) {
-                    alert(xhr.responseText);
+                   // alert(xhr.responseText);
                     reject(xhr);
                     return;
                 }
@@ -83,7 +89,6 @@ class Http {
                     reject(xhr);
                     return;
                 }
-
                 const response = JSON.parse(xhr.responseText);
                 resolve(response);
             };
@@ -97,6 +102,7 @@ class Http {
      * @param {string} url - адрес запроса
      * @return {Promise}
      */
+
     static _FetchGet(url) {
         return fetch(url, {
             method: 'GET',
@@ -106,8 +112,13 @@ class Http {
             .then(function (response) {
                 let json = response.json();
                 if (response.status >= 400) {
+
                     return json.then(response => {throw response;});
                 }
+            json.then(function(dt) {
+                   dt = data
+                    console.log(dt.userID);
+                });
                 return json;
             });
     }
@@ -129,15 +140,35 @@ class Http {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept' : 'application/json'
             }
+        }).then(function (response) {
+                if (response.status === 200 ) {
+                    return;
+                }
+                else if (response.status >= 400) {
+                    throw response;
+                }
+            });
+    }
+
+    static _FetchDelete(body, url) {
+        console.log( JSON.stringify(body));
+        return fetch(url, {
+            method: 'DELETE',
+            mode: 'cors',
+            credentials: 'include',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Accept' : 'application/json'
+            }
         })
             .then(function (response) {
-                console.log("fetch post work\n");
+                console.log("fetch Delete work\n");
                 console.log(response.status);
                 if ( response.status === 200 ) {
                     return;
                 }
                 else if (response.status >= 400){
-                    Validate.userError();
                     let json = response.json();
                     return json.then(response => {throw response;});
                 }
